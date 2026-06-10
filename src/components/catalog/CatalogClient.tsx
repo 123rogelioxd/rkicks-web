@@ -1,0 +1,175 @@
+'use client';
+import { useState, useMemo, useCallback } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import type { Product, ProductStatus, ConditionGrade } from '@/types/product';
+import { sortProducts } from '@/utils/inventory';
+import { openWhatsApp, buildSizeNotifyMessage } from '@/utils/whatsapp';
+import SearchInput from './SearchInput';
+import SortSelect, { type SortOption } from './SortSelect';
+import FilterRail, { type ActiveFilters } from './FilterRail';
+import FilterSheet from './FilterSheet';
+import ProductCard from '@/components/product/ProductCard';
+import ProductCardFeatured from '@/components/product/ProductCardFeatured';
+import EmptyState from '@/components/ui/EmptyState';
+import styles from './CatalogClient.module.css';
+
+const PAGE_SIZE = 12;
+
+interface Props {
+  products:      Product[];
+  brands:        string[];
+  sizes:         number[];
+  initialQuery?: string;
+}
+
+export default function CatalogClient({ products, brands, sizes, initialQuery = '' }: Props) {
+  const router    = useRouter();
+  const pathname  = usePathname();
+
+  const [query,       setQuery]       = useState(initialQuery);
+  const [sort,        setSort]        = useState<SortOption>('recent');
+  const [sheetOpen,   setSheetOpen]   = useState(false);
+  const [page,        setPage]        = useState(1);
+  const [filters, setFilters] = useState<ActiveFilters>({
+    brands: [], sizes: [], statuses: [], conditions: [],
+  });
+
+  const activeCount =
+    filters.brands.length + filters.sizes.length +
+    filters.statuses.length + filters.conditions.length;
+
+  const filtered = useMemo(() => {
+    let list = [...products];
+
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.model.toLowerCase().includes(q) ||
+          p.brand.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q)
+      );
+    }
+    if (filters.brands.length)     list = list.filter((p) => filters.brands.includes(p.brand));
+    if (filters.sizes.length)      list = list.filter((p) => filters.sizes.includes(p.size.us));
+    if (filters.statuses.length)   list = list.filter((p) => filters.statuses.includes(p.status));
+    if (filters.conditions.length) list = list.filter((p) => filters.conditions.includes(p.condition));
+
+    return sortProducts(list, sort);
+  }, [products, query, filters, sort]);
+
+  const featured   = filtered.find((p) => p.status === 'available') ?? null;
+  const gridItems  = filtered.filter((p) => p !== featured);
+  const visible    = gridItems.slice(0, page * PAGE_SIZE);
+  const hasMore    = visible.length < gridItems.length;
+
+  const handleFiltersChange = useCallback((next: ActiveFilters) => {
+    setFilters(next);
+    setPage(1);
+  }, []);
+
+  const handleQuery = useCallback((v: string) => {
+    setQuery(v);
+    setPage(1);
+  }, []);
+
+  const handleEmptySizeAction = () => {
+    const activeSize = filters.sizes[0];
+    if (activeSize) openWhatsApp(buildSizeNotifyMessage(activeSize));
+  };
+
+  return (
+    <div className={styles.page}>
+      {/* Header */}
+      <div className={styles.header}>
+        <div className={styles.headerRow}>
+          <div className={styles.headerLeft}>
+            <p className={styles.eyebrow}>Catálogo</p>
+            <h1 className={styles.count}>
+              {filtered.length} {filtered.length === 1 ? 'par' : 'pares'}
+            </h1>
+          </div>
+
+          <div className={styles.headerRight}>
+            <SearchInput value={query} onChange={handleQuery} />
+            <SortSelect value={sort} onChange={(v) => { setSort(v); setPage(1); }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop filter rail */}
+      <div className={styles.filterWrap}>
+        <FilterRail
+          brands={brands}
+          sizes={sizes}
+          active={filters}
+          onChange={handleFiltersChange}
+        />
+      </div>
+
+      {/* Mobile filter bar */}
+      <div className={styles.mobileBar}>
+        <button
+          type="button"
+          className={styles.mobileBtn}
+          onClick={() => setSheetOpen(true)}
+        >
+          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true">
+            <path d="M1 1h10M3 5h6M5 9h2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+          </svg>
+          Filtrar
+          {activeCount > 0 && (
+            <span className={styles.mobileBadge}>{activeCount}</span>
+          )}
+        </button>
+      </div>
+
+      {/* Filter sheet (mobile) */}
+      <FilterSheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        brands={brands}
+        sizes={sizes}
+        active={filters}
+        onApply={handleFiltersChange}
+      />
+
+      {/* Grid */}
+      {filtered.length === 0 ? (
+        <EmptyState
+          heading={query ? `Sin resultados para "${query}".` : 'Sin pares con ese filtro.'}
+          body={query ? undefined : 'Intenta con otra talla o marca.'}
+          actionLabel={filters.sizes.length > 0 ? 'Notificarme' : 'Limpiar filtros'}
+          onAction={
+            filters.sizes.length > 0
+              ? handleEmptySizeAction
+              : () => handleFiltersChange({ brands: [], sizes: [], statuses: [], conditions: [] })
+          }
+        />
+      ) : (
+        <div className={styles.grid}>
+          {featured && (
+            <div className={styles.featuredSlot}>
+              <ProductCardFeatured product={featured} />
+            </div>
+          )}
+          {visible.map((product) => (
+            <ProductCard key={product.id} product={product} variant="grid" />
+          ))}
+        </div>
+      )}
+
+      {hasMore && (
+        <div className={styles.loadMore}>
+          <button
+            type="button"
+            className={styles.loadMoreBtn}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Cargar más
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

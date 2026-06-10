@@ -1,0 +1,40 @@
+.rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: var(--rk-sp-3) 0;
+}
+
+.groupLabel {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+  padding: 4px 0;
+  white-space: nowrap;
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background: var(--rk-border-1);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+
+.clearBtn {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--rk-t3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  text-transform: uppercase;
+  transition: color var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.clearBtn:hover { color: var(--rk-t1); }

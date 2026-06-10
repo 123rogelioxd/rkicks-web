@@ -1,0 +1,113 @@
+/* ── Gallery zone: ink, full-bleed ── */
+.galleryZone {
+  background: var(--rk-ink);
+}
+
+/* ── Content zone: bone ── */
+.content {
+  min-height: 60vh;
+}
+
+.inner {
+  padding-top: var(--rk-sp-7);
+  padding-bottom: var(--rk-sp-9);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Meta section ── */
+.metaSection {
+  padding-bottom: var(--rk-sp-9);
+  border-bottom: 1px solid var(--rk-border-0);
+}
+
+/* ── Real Condition section ── */
+.rcgSection {
+  padding-top: var(--rk-sp-7);
+  padding-bottom: var(--rk-sp-9);
+  border-bottom: 1px solid var(--rk-border-0);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-6);
+}
+
+.rcgHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--rk-sp-4);
+}
+
+.rcgHeading {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h3);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+  margin: var(--rk-sp-1) 0 0;
+}
+
+.rcgStampWrap {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.rcgBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-4);
+}
+
+/* ── Complete The Fit ── */
+.ctfSection {
+  padding-top: var(--rk-sp-7);
+  padding-bottom: var(--rk-sp-7);
+  border-bottom: 1px solid var(--rk-border-0);
+}
+
+/* ── WhatsApp CTA ── */
+.ctaSection {
+  padding-top: var(--rk-sp-7);
+  padding-bottom: var(--rk-sp-3);
+}
+
+/* ── Sold state ── */
+.soldSection {
+  padding-top: var(--rk-sp-7);
+  padding-bottom: var(--rk-sp-3);
+}
+
+.soldNote {
+  font-family: var(--rk-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.soldLink {
+  display: inline-block;
+  margin-top: var(--rk-sp-3);
+  font-family: var(--rk-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rk-border-1);
+  padding-bottom: 1px;
+  transition: border-color var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.soldLink:hover { border-color: var(--rk-t1); }
+
+/* Spacer: prevents sticky mobile CTA from covering last section */
+.mobileSpacer {
+  height: 90px;
+}
+
+@media (min-width: 768px) {
+  .mobileSpacer { display: none; }
+}

@@ -1,0 +1,124 @@
+/* ── Grid card (default) ─────────────────────────────────── */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-md);
+  box-shadow: var(--rk-shadow-card);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--rk-dur-base) var(--rk-ease-out);
+}
+
+.card:hover {
+  border-color: var(--rk-border-1);
+}
+
+.card.sold {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ── Image zone ── */
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 0.85;
+  overflow: hidden;
+  background: var(--rk-surface-2);
+  flex-shrink: 0;
+}
+
+.flawDotWrap {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  z-index: 1;
+}
+
+/* ── Info zone ── */
+.body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-2);
+  flex: 1;
+}
+
+.eyebrow {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+  line-height: 1;
+}
+
+.name {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h4);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--rk-sp-2);
+  flex-wrap: wrap;
+}
+
+.sizeLabel {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: var(--rk-ls-mono);
+  color: var(--rk-t2);
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rk-sp-2);
+  margin-top: auto;
+}
+
+.price {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-price-card);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: 1;
+}
+
+/* ── Compact / horizontal variant (homepage) ── */
+.card.compact {
+  flex-direction: row;
+  align-items: stretch;
+  height: auto;
+}
+
+.card.compact .imageWrap {
+  width: 88px;
+  aspect-ratio: unset;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.card.compact .body {
+  padding: 10px 12px;
+  gap: var(--rk-sp-1);
+}
+
+.card.compact .name {
+  font-size: 13px;
+}
+
+.card.compact .price {
+  font-size: 15px;
+}

@@ -1,0 +1,5 @@
+.skel {
+  background: var(--rk-surface-2);
+  display: block;
+  flex-shrink: 0;
+}

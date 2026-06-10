@@ -1,0 +1,13 @@
+.chip {
+  display: inline-block;
+  padding: 2px 7px;
+  border: 1px solid var(--rk-border-1);
+  border-radius: var(--rk-radius-xs);
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+  flex-shrink: 0;
+  line-height: 1.4;
+}

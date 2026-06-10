@@ -1,0 +1,112 @@
+:root {
+
+  /* ── Surfaces ──────────────────────────────────────────── */
+  --rk-canvas:    #F0EAE0;
+  --rk-surface:   #FDFAF5;
+  --rk-surface-2: #E8E2D7;
+  --rk-ink:       #0D0B08;
+  --rk-elevated:  #D9D2C7;
+
+  /* ── Foreground / text ─────────────────────────────────── */
+  --rk-t1:        #0D0B08;
+  --rk-t2:        #2C2620;
+  --rk-t3:        #7A736C;
+  --rk-t-bone:    #F0EAE0;
+  --rk-t-bone-dim:rgba(240,234,224,0.45);
+
+  /* ── Borders ───────────────────────────────────────────── */
+  --rk-border-0:  rgba(13,11,8,0.08);
+  --rk-border-1:  rgba(13,11,8,0.14);
+  --rk-border-2:  rgba(13,11,8,0.22);
+  --rk-border-ink:rgba(240,234,224,0.12);
+
+  /* ── Status — commerce ─────────────────────────────────── */
+  --rk-available:     #0A6B42;
+  --rk-available-bg:  rgba(10,107,66,0.09);
+  --rk-reserved:      #8A5A08;
+  --rk-reserved-bg:   rgba(138,90,8,0.09);
+  --rk-sold:          #7A736C;
+  --rk-sold-bg:       rgba(13,11,8,0.06);
+  --rk-preorder:      #2C5F8A;
+  --rk-preorder-bg:   rgba(44,95,138,0.09);
+
+  /* ── Flaw levels ────────────────────────────────────────── */
+  --rk-flaw-none:     #0A6B42;
+  --rk-flaw-minor:    #8A7A60;
+  --rk-flaw-visible:  #F5A524;
+  --rk-flaw-heavy:    #C05020;
+
+  /* ── Ecosystem accents ──────────────────────────────────── */
+  --rk-gold:      #C9A961;
+  --rk-gold-bg:   rgba(201,169,97,0.10);
+  /* NOTE: violet (#7C5CFF) is R Supply OS only — NEVER appears in RKicks */
+
+  /* ── Typography ─────────────────────────────────────────── */
+  --rk-font-sans:  "Inter", -apple-system, "Segoe UI", sans-serif;
+  --rk-font-serif: "Cormorant Garamond", Georgia, serif;
+  --rk-font-mono:  "DM Mono", ui-monospace, monospace;
+
+  /* ── Type scale ─────────────────────────────────────────── */
+  --rk-fs-price:      42px;
+  --rk-fs-price-card: 20px;
+  --rk-fs-h1:         28px;
+  --rk-fs-h2:         22px;
+  --rk-fs-h3:         18px;
+  --rk-fs-h4:         14px;
+  --rk-fs-body:       13px;
+  --rk-fs-small:      12px;
+  --rk-fs-caption:    11px;
+  --rk-fs-eyebrow:    9px;
+  --rk-fs-mono:       11px;
+
+  /* ── Line heights ───────────────────────────────────────── */
+  --rk-lh-tight:   1.05;
+  --rk-lh-snug:    1.2;
+  --rk-lh-normal:  1.55;
+  --rk-lh-relaxed: 1.7;
+
+  /* ── Letter spacing ─────────────────────────────────────── */
+  --rk-ls-price:   -0.04em;
+  --rk-ls-heading: -0.02em;
+  --rk-ls-eyebrow: 0.18em;
+  --rk-ls-mono:    0.06em;
+  --rk-ls-chip:    0.08em;
+
+  /* ── Spacing (4pt base) ─────────────────────────────────── */
+  --rk-sp-1:   4px;
+  --rk-sp-2:   8px;
+  --rk-sp-3:   12px;
+  --rk-sp-4:   16px;
+  --rk-sp-5:   20px;
+  --rk-sp-6:   24px;
+  --rk-sp-7:   32px;
+  --rk-sp-8:   40px;
+  --rk-sp-9:   56px;
+  --rk-sp-10:  72px;
+
+  /* ── Border radius ──────────────────────────────────────── */
+  --rk-radius-xs:   3px;
+  --rk-radius-sm:   5px;
+  --rk-radius-md:   8px;
+  --rk-radius-lg:   10px;
+  --rk-radius-pill: 999px;
+
+  /* ── Shadows ────────────────────────────────────────────── */
+  --rk-shadow-card:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 1px 3px rgba(13,11,8,0.06);
+  --rk-shadow-elevated:
+    0 4px 16px rgba(13,11,8,0.10),
+    0 1px 4px rgba(13,11,8,0.06);
+  --rk-shadow-modal:
+    0 12px 40px rgba(13,11,8,0.14),
+    0 2px 8px rgba(13,11,8,0.08);
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  --rk-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --rk-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --rk-dur-fast:    120ms;
+  --rk-dur-base:    200ms;
+  --rk-dur-slow:    320ms;
+
+}

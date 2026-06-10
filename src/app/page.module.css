@@ -1,0 +1,317 @@
+/* ── Hero ── */
+.heroZone {
+  background: var(--rk-ink);
+}
+
+/*
+  Content-driven height — no aspect-ratio.
+  Padding creates breathing room; real photography
+  will eventually fill the background.
+*/
+.hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--rk-ink);
+  display: flex;
+  align-items: stretch;
+}
+
+/* Editorial CSS photo treatment — unchanged */
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(255,255,255,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 60%),
+    var(--rk-ink);
+}
+
+.heroBg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 39px,
+    rgba(240,234,224,0.018) 39px,
+    rgba(240,234,224,0.018) 40px
+  ),
+  repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 39px,
+    rgba(240,234,224,0.018) 39px,
+    rgba(240,234,224,0.018) 40px
+  );
+}
+
+/* Content is in-flow — no absolute positioning */
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 64px var(--rk-sp-4) 56px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-5);
+}
+
+@media (min-width: 768px) {
+  .heroContent {
+    padding: 80px var(--rk-sp-7) 72px;
+    max-width: 600px; /* constrains text column; right side holds real photo */
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroContent {
+    padding: 96px var(--rk-sp-10) 88px;
+  }
+}
+
+/* Eyebrow — unchanged token usage */
+.heroEyebrow {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rk-t-bone-dim);
+}
+
+/* Headline — unchanged: Cormorant italic, once per section */
+.heroHeadline {
+  font-family: var(--rk-font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--rk-t-bone);
+  line-height: var(--rk-lh-snug);
+}
+
+@media (min-width: 768px) {
+  .heroHeadline { font-size: 28px; }
+}
+
+/* Descriptor — commercial clarity below the brand claim */
+.heroDescriptor {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  color: rgba(240,234,224,0.65);
+  line-height: var(--rk-lh-relaxed);
+  max-width: 360px;
+}
+
+/* Stats strip — live inventory + price floor + trust signal */
+.heroStats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--rk-sp-3);
+  padding: var(--rk-sp-3) 0;
+  border-top: 1px solid var(--rk-border-ink);
+  border-bottom: 1px solid var(--rk-border-ink);
+}
+
+.heroStat {
+  display: flex;
+  align-items: center;
+  gap: var(--rk-sp-1);
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t-bone-dim);
+  white-space: nowrap;
+}
+
+.heroStatDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--rk-available);
+  flex-shrink: 0;
+}
+
+.heroStatDiv {
+  width: 1px;
+  height: 10px;
+  background: var(--rk-border-ink);
+  flex-shrink: 0;
+}
+
+/* CTA row */
+.heroCTARow {
+  display: flex;
+  align-items: center;
+  gap: var(--rk-sp-4);
+  flex-wrap: wrap;
+}
+
+.heroCTA {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rk-sp-2);
+  padding: 10px 18px;
+  background: var(--rk-t-bone);
+  color: var(--rk-ink);
+  border-radius: var(--rk-radius-md);
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: opacity var(--rk-dur-fast) var(--rk-ease-out);
+  min-height: 40px;
+}
+
+.heroCTA:hover  { opacity: 0.88; }
+.heroCTA:active { opacity: 0.75; }
+
+.heroSecondaryLink {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t-bone-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rk-border-ink);
+  padding-bottom: 1px;
+  transition: color var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.heroSecondaryLink:hover { color: var(--rk-t-bone); }
+
+/* ── Available Now ── */
+.availableSection {
+  padding: var(--rk-sp-9) 0 var(--rk-sp-7);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--rk-sp-3);
+  margin-bottom: var(--rk-sp-5);
+}
+
+.sectionTitle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-1);
+}
+
+.sectionH {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h2);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: 1.1;
+}
+
+.sectionLink {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rk-t1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rk-t1);
+  padding-bottom: 1px;
+  transition: opacity var(--rk-dur-fast) var(--rk-ease-out);
+  white-space: nowrap;
+}
+
+.sectionLink:hover { opacity: 0.65; }
+
+.compactGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-3);
+}
+
+/* ── RCG Teaser ── */
+.rcgSection {
+  padding: var(--rk-sp-7) 0;
+  border-top: 1px solid var(--rk-border-0);
+  border-bottom: 1px solid var(--rk-border-0);
+}
+
+.rcgInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-5);
+}
+
+@media (min-width: 768px) {
+  .rcgInner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.rcgLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-3);
+  max-width: 480px;
+}
+
+.rcgHeadline {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+}
+
+.rcgBody {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+.rcgRight {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--rk-sp-3);
+}
+
+@media (min-width: 768px) {
+  .rcgRight { align-items: flex-end; }
+}
+
+.rcgLink {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rk-border-1);
+  padding-bottom: 1px;
+  transition: border-color var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.rcgLink:hover { border-color: var(--rk-t1); }
+
+/* ── Complete The Fit zone ── */
+.ctfSection {
+  padding: var(--rk-sp-7) 0;
+}
+
+/* ── Gap before footer ── */
+.pageEnd {
+  padding-bottom: var(--rk-sp-4);
+}

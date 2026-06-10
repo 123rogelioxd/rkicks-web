@@ -1,0 +1,32 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.select {
+  appearance: none;
+  padding: 5px 28px 5px 10px;
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border-1);
+  border-radius: var(--rk-radius-sm);
+  font-family: var(--rk-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--rk-t1);
+  cursor: pointer;
+  outline: none;
+  height: 36px;
+  transition: border-color var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.select:focus {
+  border-color: var(--rk-border-2);
+}
+
+.chevron {
+  position: absolute;
+  right: 8px;
+  color: var(--rk-t3);
+  pointer-events: none;
+}

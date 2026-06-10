@@ -1,0 +1,445 @@
+/* ── Hero ── */
+.heroZone {
+  background: var(--rk-ink);
+}
+
+.hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--rk-sp-6);
+  padding-top: var(--rk-sp-9);
+  padding-bottom: var(--rk-sp-9);
+  flex-wrap: wrap;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-4);
+  max-width: 560px;
+}
+
+.heroHeadline {
+  font-family: var(--rk-font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--rk-t-bone);
+  line-height: var(--rk-lh-snug);
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .heroHeadline { font-size: 34px; }
+}
+
+.heroSub {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: rgba(240,234,224,0.6);
+  line-height: var(--rk-lh-relaxed);
+  max-width: 420px;
+}
+
+.heroStamp {
+  flex-shrink: 0;
+  padding-bottom: 4px;
+}
+
+/* ── Sections ── */
+.section {
+  padding: var(--rk-sp-9) 0;
+}
+
+.sectionBorder {
+  border-top: 1px solid var(--rk-border-0);
+}
+
+.sectionInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-6);
+}
+
+.sectionH {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h2);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+  margin: 0;
+}
+
+.sectionDesc {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+  margin-top: calc(-1 * var(--rk-sp-3));
+}
+
+.body {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+/* ── Program intro ── */
+.introGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-6);
+}
+
+@media (min-width: 768px) {
+  .introGrid {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--rk-sp-9);
+  }
+}
+
+.introText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-4);
+  max-width: 560px;
+}
+
+.introStamp {
+  flex-shrink: 0;
+  padding-top: var(--rk-sp-2);
+}
+
+/* ── Condition grades ── */
+.gradeTable {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rk-border-1);
+  border-radius: var(--rk-radius-md);
+  overflow: hidden;
+  background: var(--rk-surface);
+}
+
+.gradeRow {
+  display: flex;
+  gap: var(--rk-sp-5);
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rk-border-0);
+  flex-wrap: wrap;
+}
+
+.gradeRow:last-child { border-bottom: none; }
+
+@media (min-width: 640px) {
+  .gradeRow { flex-wrap: nowrap; }
+}
+
+.gradeLeft {
+  flex-shrink: 0;
+  min-width: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gradeKey {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--rk-t1);
+}
+
+.gradeEs {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.gradeRight {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.gradeDef {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-normal);
+}
+
+.gradeEx {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--rk-t3);
+  line-height: var(--rk-lh-normal);
+  font-style: italic;
+}
+
+/* ── Flaw levels ── */
+.flawGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--rk-sp-3);
+}
+
+@media (min-width: 768px) {
+  .flawGrid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.flawCard {
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border-1);
+  border-radius: var(--rk-radius-md);
+  padding: var(--rk-sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-3);
+}
+
+.flawBar {
+  display: flex;
+  gap: 3px;
+}
+
+.flawSeg {
+  display: block;
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.flawLabel {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--rk-t1);
+}
+
+.flawDef {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+/* ── Auth steps ── */
+.stepList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  counter-reset: steps;
+}
+
+.step {
+  display: flex;
+  gap: var(--rk-sp-4);
+  align-items: flex-start;
+  padding: var(--rk-sp-4) 0;
+  border-bottom: 1px solid var(--rk-border-0);
+}
+
+.step:last-child { border-bottom: none; }
+
+.stepNum {
+  flex-shrink: 0;
+  font-family: var(--rk-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--rk-t3);
+  min-width: 28px;
+  padding-top: 2px;
+}
+
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stepTitle {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--rk-t1);
+}
+
+.stepDetail {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+/* ── Photo types ── */
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--rk-sp-4);
+}
+
+@media (min-width: 560px) {
+  .photoGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.photoCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-3);
+}
+
+.photoPlaceholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--rk-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.photoPlaceholderLabel {
+  font-family: var(--rk-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240,234,224,0.2);
+}
+
+.photoType {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--rk-t1);
+}
+
+.photoDef {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+/* ── Customer protection ── */
+.guaranteeBlock {
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border-1);
+  border-radius: var(--rk-radius-md);
+  padding: var(--rk-sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-5);
+}
+
+.guaranteeStatement {
+  font-family: var(--rk-font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+  max-width: 520px;
+}
+
+.guaranteeList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-2);
+}
+
+.guaranteeList li {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-normal);
+  padding-left: var(--rk-sp-4);
+  position: relative;
+}
+
+.guaranteeList li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--rk-t3);
+}
+
+/* ── FAQ ── */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--rk-border-1);
+  border-radius: var(--rk-radius-md);
+  overflow: hidden;
+  background: var(--rk-surface);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--rk-border-0);
+}
+
+.faqItem:last-child { border-bottom: none; }
+
+.faqQ {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  font-family: var(--rk-font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--rk-t1);
+  cursor: pointer;
+  list-style: none;
+  gap: var(--rk-sp-4);
+  transition: background var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.faqQ::-webkit-details-marker { display: none; }
+
+.faqQ::after {
+  content: '+';
+  font-family: var(--rk-font-mono);
+  font-size: 14px;
+  color: var(--rk-t3);
+  flex-shrink: 0;
+  transition: transform var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.faqItem[open] .faqQ::after {
+  transform: rotate(45deg);
+}
+
+.faqItem[open] .faqQ {
+  background: var(--rk-canvas);
+}
+
+.faqA {
+  padding: 0 16px 13px;
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}

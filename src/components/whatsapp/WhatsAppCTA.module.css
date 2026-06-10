@@ -1,0 +1,130 @@
+/* ── Homepage section variant ── */
+.section {
+  background: var(--rk-ink);
+  padding: var(--rk-sp-9) 0;
+}
+
+.sectionInner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--rk-sp-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--rk-sp-4);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .sectionInner { padding: 0 var(--rk-sp-7); }
+}
+@media (min-width: 1024px) {
+  .sectionInner { padding: 0 var(--rk-sp-10); }
+}
+
+.sectionHeading {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t-bone);
+  line-height: var(--rk-lh-snug);
+}
+
+.sectionSub {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rk-t-bone-dim);
+}
+
+/* ── Primary button ── */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rk-sp-2);
+  width: 100%;
+  max-width: 440px;
+  padding: 14px 20px;
+  background: var(--rk-t-bone);
+  color: var(--rk-ink);
+  border: none;
+  border-radius: var(--rk-radius-md);
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: opacity var(--rk-dur-fast) var(--rk-ease-out);
+  text-decoration: none;
+}
+
+.btn:hover  { opacity: 0.88; }
+.btn:active { opacity: 0.75; }
+
+/* ── Inline button (within a bone zone) ── */
+.btnInk {
+  background: var(--rk-ink);
+  color: var(--rk-t-bone);
+}
+
+/* ── Sticky mobile / inline desktop CTA ── */
+.sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--rk-ink);
+  padding: 14px var(--rk-sp-4) calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--rk-border-ink);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--rk-sp-1);
+}
+
+@media (min-width: 768px) {
+  .sticky {
+    position: static;
+    padding: var(--rk-sp-6);
+    border-top: none;
+    border-radius: var(--rk-radius-md);
+  }
+}
+
+.stickyBtn {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--rk-t-bone);
+  color: var(--rk-ink);
+  border: none;
+  border-radius: var(--rk-radius-md);
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: opacity var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.stickyBtn:hover  { opacity: 0.88; }
+.stickyBtn:active { opacity: 0.75; }
+
+.stickyMeta {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  color: var(--rk-t-bone-dim);
+  text-align: center;
+}
+
+/* WhatsApp icon */
+.waIcon { flex-shrink: 0; }

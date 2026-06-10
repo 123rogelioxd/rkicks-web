@@ -1,0 +1,23 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rk-sp-1);
+  padding: 2px 7px;
+  border: 1px solid var(--rk-t1);
+  border-radius: var(--rk-radius-xs);
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--rk-t1);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--rk-t1);
+  flex-shrink: 0;
+}

@@ -1,0 +1,40 @@
+.table {
+  border: 1px solid var(--rk-border-1);
+  border-radius: var(--rk-radius-md);
+  overflow: hidden;
+  background: var(--rk-surface);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rk-sp-4);
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--rk-border-0);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowHighlight {
+  background: var(--rk-canvas);
+}
+
+.label {
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+  flex-shrink: 0;
+}
+
+.value {
+  font-family: var(--rk-font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--rk-t1);
+  text-align: right;
+}

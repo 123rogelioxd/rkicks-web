@@ -1,0 +1,22 @@
+.bar {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.seg {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  opacity: 0.4;
+  background: var(--rk-t3);
+}
+
+.seg.active {
+  opacity: 1;
+}
+
+.seg.none    { background: var(--rk-flaw-none); }
+.seg.minor   { background: var(--rk-flaw-minor); }
+.seg.visible { background: var(--rk-flaw-visible); }
+.seg.heavy   { background: var(--rk-flaw-heavy); }

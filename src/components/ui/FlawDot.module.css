@@ -1,0 +1,12 @@
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rk-surface);
+  flex-shrink: 0;
+}
+
+.none    { background: var(--rk-flaw-none); }
+.minor   { background: var(--rk-flaw-minor); }
+.visible { background: var(--rk-flaw-visible); }
+.heavy   { background: var(--rk-flaw-heavy); }
