@@ -10,11 +10,11 @@ import { getRecentAvailable, getFeaturedPairing, getAvailableProducts, getMinAva
 import { formatPrice } from '@/utils/currency';
 import styles from './page.module.css';
 
-export default function HomePage() {
-  const recentPairs     = getRecentAvailable(3);
-  const featuredPair    = getFeaturedPairing();
-  const availableCount  = getAvailableProducts().length;
-  const minPrice        = getMinAvailablePrice();
+export default async function HomePage() {
+  const recentPairs     = await getRecentAvailable(3);
+  const featuredPair    = await getFeaturedPairing();
+  const availableCount  = (await getAvailableProducts()).length;
+  const minPrice        = await getMinAvailablePrice();
 
   return (
     <>

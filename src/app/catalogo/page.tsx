@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import CatalogClient from '@/components/catalog/CatalogClient';
@@ -10,29 +9,22 @@ export const metadata = {
   description: 'Todos los pares disponibles en RKicks. Verificados, documentados, con precio honesto.',
 };
 
-export default async function CatalogPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
-  const params   = await searchParams;
-  const products = getAllProducts();
-  const brands   = getUniqueBrands();
-  const sizes    = getUniqueSizes();
+export default async function CatalogPage() {
+  const products = await getAllProducts();
+  const brands = await getUniqueBrands();
+  const sizes = await getUniqueSizes();
 
   return (
     <>
       <Nav />
       <main className={styles.main}>
         <div className="rk-page">
-          <Suspense>
-            <CatalogClient
-              products={products}
-              brands={brands}
-              sizes={sizes}
-              initialQuery={params.q ?? ''}
-            />
-          </Suspense>
+          <CatalogClient
+            products={products}
+            brands={brands}
+            sizes={sizes}
+            initialQuery=""
+          />
         </div>
       </main>
       <Footer />

@@ -12,14 +12,26 @@ import RCGStamp from '@/components/rcg/RCGStamp';
 import CompleteTheFit from '@/components/ecosystem/CompleteTheFit';
 import { WhatsAppProductCTA } from '@/components/whatsapp/WhatsAppCTA';
 import Eyebrow from '@/components/ui/Eyebrow';
-import { getProductBySlug, getPairingForSneaker, getAllProducts } from '@/utils/data';
+
 import { formatPrice } from '@/utils/currency';
 import type { Metadata } from 'next';
 import styles from './page.module.css';
 
+
+import { getProductBySlug, getPairingForSneaker, getAllProducts } from '@/utils/data';
+
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((product) => ({
+    slug: product.slug,
+  }));
+}
+
+
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return { title: 'Producto no encontrado · RKicks' };
   return {
     title: `${product.model} · US ${product.size.us} · ${formatPrice(product.price)} MXN · RKicks`,
@@ -34,11 +46,11 @@ interface Props {
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
 
-  const product     = getProductBySlug(slug);
+  const product     = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const pairing     = getPairingForSneaker(slug);
-  const allProducts = getAllProducts();
+  const pairing     = await getPairingForSneaker(slug);
+  const allProducts = await getAllProducts();
 
   return (
     <>
