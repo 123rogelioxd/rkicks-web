@@ -37,6 +37,8 @@ type ApiProduct = Record<string, unknown> & {
   availability?: string | null;
   photo_url?: string | null;
   primary_photo_url?: string | null;
+  photoUrl?: string | null;
+  primaryPhotoUrl?: string | null;
   photos?: unknown;
   created_at?: string | null;
   updated_at?: string | null;
@@ -57,7 +59,8 @@ let catalogPromise: Promise<Product[]> | null = null;
 const productPromises = new Map<string, Promise<Product | null>>();
 
 async function fetchJson<T>(path: string): Promise<T> {
-  const url = `${API_BASE}${path}`;
+  const separator = path.includes('?') ? '&' : '?';
+  const url = `${API_BASE}${path}${separator}_=${Date.now()}`;
 
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
@@ -73,7 +76,15 @@ async function fetchJson<T>(path: string): Promise<T> {
 
 function requestJson<T>(url: string, path: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    const req = get(url, { family: 4, headers: { Accept: 'application/json' }, timeout: 15000 }, (res) => {
+    const req = get(url, {
+      family: 4,
+      headers: {
+        Accept: 'application/json',
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+      },
+      timeout: 15000,
+    }, (res) => {
       const chunks: Buffer[] = [];
 
       res.on('data', (chunk: Buffer) => chunks.push(chunk));
@@ -108,7 +119,13 @@ async function getApiCatalog(): Promise<Product[]> {
   try {
     const data = await fetchJson<ApiProduct[]>('/catalog');
     if (!Array.isArray(data)) throw new Error('RKicks API catalog response was not an array');
-    return data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
+    const products = data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
+
+    products.forEach((product) => {
+      console.info(`[rkicks-build] ${product.slug} primary image: ${product.photos[0]?.url || '(missing)'}`);
+    });
+
+    return products;
   } catch (error) {
     console.warn('Using local RKicks mock data because the production API could not be loaded.', error);
     return fallbackProducts;
@@ -321,18 +338,20 @@ function mapFlaws(flaws: unknown, conditionReport: ApiProduct['condition_report'
 
 function getPhotoUrls(apiProduct: ApiProduct): string[] {
   const photos: Photo[] = [];
+  const primaryPhotoUrl = cleanUrl(apiProduct.primary_photo_url ?? apiProduct.primaryPhotoUrl);
+  const photoUrl = cleanUrl(apiProduct.photo_url ?? apiProduct.photoUrl);
 
-  if (apiProduct.primary_photo_url) {
+  if (primaryPhotoUrl) {
     photos.push({
-      url: apiProduct.primary_photo_url,
+      url: primaryPhotoUrl,
       type: 'editorial',
       alt: stringOr(apiProduct.model, 'Sneaker RKicks'),
     });
   }
 
-  if (apiProduct.photo_url && apiProduct.photo_url !== apiProduct.primary_photo_url) {
+  if (photoUrl && photoUrl !== primaryPhotoUrl) {
     photos.push({
-      url: apiProduct.photo_url,
+      url: photoUrl,
       type: 'condition',
       alt: stringOr(apiProduct.model, 'Sneaker RKicks'),
     });
@@ -341,12 +360,15 @@ function getPhotoUrls(apiProduct: ApiProduct): string[] {
   if (Array.isArray(apiProduct.photos)) {
     apiProduct.photos.forEach((photo, index) => {
       if (typeof photo === 'string') {
-        photos.push({ url: photo, type: index === 0 ? 'editorial' : 'condition', alt: stringOr(apiProduct.model, 'Sneaker RKicks') });
+        const url = cleanUrl(photo);
+        if (url) {
+          photos.push({ url, type: index === 0 ? 'editorial' : 'condition', alt: stringOr(apiProduct.model, 'Sneaker RKicks') });
+        }
         return;
       }
 
       if (!isRecord(photo)) return;
-      const url = stringOr(photo.url ?? photo.photo_url ?? photo.src, '');
+      const url = cleanUrl(photo.url ?? photo.photo_url ?? photo.primary_photo_url ?? photo.src);
       if (!url) return;
 
       photos.push({
@@ -358,6 +380,10 @@ function getPhotoUrls(apiProduct: ApiProduct): string[] {
   }
 
   return [...new Set(photos.map((photo) => photo.url).filter(Boolean))];
+}
+
+function cleanUrl(value: unknown): string {
+  return stringOr(value, '').trim();
 }
 
 function getSubtitle(apiProduct: ApiProduct): string {
