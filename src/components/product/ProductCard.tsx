@@ -28,6 +28,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
           alt={editorial?.alt ?? product.model}
           brand={product.brand}
           objectFit="contain"
+          variant={variant === 'grid' ? 'catalogCard' : 'default'}
           style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
         />
         <span className={styles.flawDotWrap}>

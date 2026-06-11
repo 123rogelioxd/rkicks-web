@@ -19,6 +19,21 @@
   object-fit: contain;
 }
 
+.catalogCard {
+  display: grid;
+  place-items: center;
+}
+
+.catalogCardImg {
+  width: 82%;
+  height: 82%;
+  max-height: calc(100% - 24px);
+  margin: auto;
+  padding: 12px;
+  box-sizing: border-box;
+  object-fit: contain;
+}
+
 .placeholder {
   position: absolute;
   inset: 0;
