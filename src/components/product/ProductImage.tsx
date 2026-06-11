@@ -10,9 +10,10 @@ interface Props {
   className?: string;
   style?: React.CSSProperties;
   eager?: boolean;
+  objectFit?: 'cover' | 'contain';
 }
 
-export default function ProductImage({ src, alt, brand, className, style, eager }: Props) {
+export default function ProductImage({ src, alt, brand, className, style, eager, objectFit = 'cover' }: Props) {
   const [failed, setFailed] = useState(false);
   const useFallback = failed || !src;
 
@@ -23,7 +24,7 @@ export default function ProductImage({ src, alt, brand, className, style, eager 
         <img
           src={src}
           alt={alt}
-          className={styles.img}
+          className={`${styles.img} ${objectFit === 'contain' ? styles.contain : styles.cover}`}
           loading={eager ? 'eager' : 'lazy'}
           onError={() => setFailed(true)}
         />

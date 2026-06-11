@@ -27,6 +27,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
           src={editorial?.url ?? ''}
           alt={editorial?.alt ?? product.model}
           brand={product.brand}
+          objectFit="contain"
           style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
         />
         <span className={styles.flawDotWrap}>
