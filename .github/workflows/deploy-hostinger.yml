@@ -25,6 +25,12 @@ jobs:
       - name: Build static export
         run: npm run build
 
+      - name: Verify runtime API bridge files
+        run: |
+          test -f out/api/rkicks/catalog.php
+          test -f out/api/rkicks/product.php
+          ls -la out/api/rkicks
+
       - name: Install lftp
         run: |
           sudo apt-get update

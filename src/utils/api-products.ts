@@ -11,6 +11,7 @@ import type {
 } from '@/types/product';
 
 export const RKICKS_API_BASE = 'https://api.rdecants.com/api/rkicks';
+const ENABLE_PRODUCTION_API_DEBUG = true;
 
 export type ApiProduct = Record<string, unknown> & {
   id?: string | number | null;
@@ -122,9 +123,10 @@ export function mapApiProduct(apiProduct: ApiProduct): Product | null {
 
 async function fetchRuntimeJson<T>(sameOriginPath: string, apiPath: string): Promise<T> {
   try {
-    return await fetchJsonUrl<T>(cacheBust(sameOriginPath));
-  } catch {
-    return fetchJsonUrl<T>(cacheBust(`${RKICKS_API_BASE}${apiPath}`));
+    return await fetchJsonUrl<T>(cacheBust(sameOriginPath), 'same-origin');
+  } catch (sameOriginError) {
+    logRuntimeApi('fallback reason', sameOriginError);
+    return fetchJsonUrl<T>(cacheBust(`${RKICKS_API_BASE}${apiPath}`), 'direct-api');
   }
 }
 
@@ -133,11 +135,12 @@ function cacheBust(url: string): string {
   return `${url}${separator}_=${Date.now()}`;
 }
 
-async function fetchJsonUrl<T>(url: string): Promise<T> {
+async function fetchJsonUrl<T>(url: string, source: 'same-origin' | 'direct-api'): Promise<T> {
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 15000);
 
   try {
+    logRuntimeApi('attempt', { source, url });
     const response = await fetch(url, {
       cache: 'no-store',
       headers: {
@@ -145,6 +148,8 @@ async function fetchJsonUrl<T>(url: string): Promise<T> {
       },
       signal: controller.signal,
     });
+
+    logRuntimeApi('response', { source, url, status: response.status });
 
     if (!response.ok) {
       throw new Error(`RKicks API request failed with ${response.status}`);
@@ -154,6 +159,19 @@ async function fetchJsonUrl<T>(url: string): Promise<T> {
   } finally {
     window.clearTimeout(timeout);
   }
+}
+
+export function canUseLocalRuntimeFallback(): boolean {
+  return process.env.NODE_ENV !== 'production';
+}
+
+export function logRuntimeApi(message: string, details?: unknown): void {
+  if (!shouldLogRuntimeApi()) return;
+  console.info(`[rkicks-runtime-api] ${message}`, details ?? '');
+}
+
+function shouldLogRuntimeApi(): boolean {
+  return process.env.NODE_ENV !== 'production' || ENABLE_PRODUCTION_API_DEBUG;
 }
 
 function mapStatus(status: unknown): ProductStatus {

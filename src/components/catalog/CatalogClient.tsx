@@ -3,7 +3,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import type { Product } from '@/types/product';
 import { sortProducts } from '@/utils/inventory';
 import { openWhatsApp, buildSizeNotifyMessage } from '@/utils/whatsapp';
-import { fetchLiveCatalog } from '@/utils/api-products';
+import { canUseLocalRuntimeFallback, fetchLiveCatalog, logRuntimeApi } from '@/utils/api-products';
 import SearchInput from './SearchInput';
 import SortSelect, { type SortOption } from './SortSelect';
 import FilterRail, { type ActiveFilters } from './FilterRail';
@@ -26,6 +26,7 @@ interface Props {
 export default function CatalogClient({ products, brands, sizes, initialQuery = '' }: Props) {
   const [runtimeProducts, setRuntimeProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [query,       setQuery]       = useState(initialQuery);
   const [sort,        setSort]        = useState<SortOption>('recent');
   const [sheetOpen,   setSheetOpen]   = useState(false);
@@ -39,12 +40,22 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
 
     async function loadCatalog() {
       setLoading(true);
+      setApiError(null);
       try {
         const liveProducts = await fetchLiveCatalog();
-        if (!cancelled) setRuntimeProducts(liveProducts);
+        if (!cancelled) {
+          setRuntimeProducts(liveProducts);
+        }
       } catch (error) {
-        console.warn('Using local RKicks catalog fallback because the live API could not be loaded.', error);
-        if (!cancelled) setRuntimeProducts(products);
+        logRuntimeApi('catalog fallback reason', error);
+        if (!cancelled) {
+          if (canUseLocalRuntimeFallback()) {
+            setRuntimeProducts(products);
+          } else {
+            setRuntimeProducts([]);
+            setApiError('No pudimos cargar el catalogo en vivo.');
+          }
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -181,6 +192,13 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
             <Skeleton key={index} height={360} radius="var(--rk-radius-md)" />
           ))}
         </div>
+      ) : apiError ? (
+        <EmptyState
+          heading={apiError}
+          body="Intenta recargar la pagina. Si el problema continua, escribenos por WhatsApp."
+          actionLabel="Preguntar por WhatsApp"
+          onAction={() => openWhatsApp('Hola, no pude ver el catalogo de RKicks. Me ayudas con los pares disponibles?')}
+        />
       ) : filtered.length === 0 ? (
         <EmptyState
           heading={query ? `Sin resultados para "${query}".` : 'Sin pares con ese filtro.'}
