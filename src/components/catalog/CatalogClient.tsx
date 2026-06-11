@@ -1,9 +1,9 @@
 'use client';
-import { useState, useMemo, useCallback } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import type { Product, ProductStatus, ConditionGrade } from '@/types/product';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import type { Product } from '@/types/product';
 import { sortProducts } from '@/utils/inventory';
 import { openWhatsApp, buildSizeNotifyMessage } from '@/utils/whatsapp';
+import { fetchLiveCatalog } from '@/utils/api-products';
 import SearchInput from './SearchInput';
 import SortSelect, { type SortOption } from './SortSelect';
 import FilterRail, { type ActiveFilters } from './FilterRail';
@@ -11,6 +11,7 @@ import FilterSheet from './FilterSheet';
 import ProductCard from '@/components/product/ProductCard';
 import ProductCardFeatured from '@/components/product/ProductCardFeatured';
 import EmptyState from '@/components/ui/EmptyState';
+import Skeleton from '@/components/ui/Skeleton';
 import styles from './CatalogClient.module.css';
 
 const PAGE_SIZE = 12;
@@ -23,9 +24,8 @@ interface Props {
 }
 
 export default function CatalogClient({ products, brands, sizes, initialQuery = '' }: Props) {
-  const router    = useRouter();
-  const pathname  = usePathname();
-
+  const [runtimeProducts, setRuntimeProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [query,       setQuery]       = useState(initialQuery);
   const [sort,        setSort]        = useState<SortOption>('recent');
   const [sheetOpen,   setSheetOpen]   = useState(false);
@@ -34,12 +34,49 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
     brands: [], sizes: [], statuses: [], conditions: [],
   });
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCatalog() {
+      setLoading(true);
+      try {
+        const liveProducts = await fetchLiveCatalog();
+        if (!cancelled) setRuntimeProducts(liveProducts);
+      } catch (error) {
+        console.warn('Using local RKicks catalog fallback because the live API could not be loaded.', error);
+        if (!cancelled) setRuntimeProducts(products);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadCatalog();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [products]);
+
+  const activeProducts = runtimeProducts.length > 0 || !loading ? runtimeProducts : [];
+  const activeBrands = useMemo(
+    () => activeProducts.length > 0
+      ? [...new Set(activeProducts.map((product) => product.brand))].sort()
+      : brands,
+    [activeProducts, brands]
+  );
+  const activeSizes = useMemo(
+    () => activeProducts.length > 0
+      ? [...new Set(activeProducts.map((product) => product.size.us))].sort((a, b) => a - b)
+      : sizes,
+    [activeProducts, sizes]
+  );
+
   const activeCount =
     filters.brands.length + filters.sizes.length +
     filters.statuses.length + filters.conditions.length;
 
   const filtered = useMemo(() => {
-    let list = [...products];
+    let list = [...activeProducts];
 
     if (query.trim()) {
       const q = query.toLowerCase();
@@ -56,7 +93,7 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
     if (filters.conditions.length) list = list.filter((p) => filters.conditions.includes(p.condition));
 
     return sortProducts(list, sort);
-  }, [products, query, filters, sort]);
+  }, [activeProducts, query, filters, sort]);
 
   const featured   = filtered.find((p) => p.status === 'available') ?? null;
   const gridItems  = filtered.filter((p) => p !== featured);
@@ -100,8 +137,8 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
       {/* Desktop filter rail */}
       <div className={styles.filterWrap}>
         <FilterRail
-          brands={brands}
-          sizes={sizes}
+          brands={activeBrands}
+          sizes={activeSizes}
           active={filters}
           onChange={handleFiltersChange}
         />
@@ -128,14 +165,23 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
       <FilterSheet
         open={sheetOpen}
         onClose={() => setSheetOpen(false)}
-        brands={brands}
-        sizes={sizes}
+        brands={activeBrands}
+        sizes={activeSizes}
         active={filters}
         onApply={handleFiltersChange}
       />
 
       {/* Grid */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className={styles.grid} aria-busy="true" aria-label="Cargando catalogo">
+          <div className={styles.featuredSlot}>
+            <Skeleton height={260} radius="var(--rk-radius-md)" />
+          </div>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton key={index} height={360} radius="var(--rk-radius-md)" />
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
         <EmptyState
           heading={query ? `Sin resultados para "${query}".` : 'Sin pares con ese filtro.'}
           body={query ? undefined : 'Intenta con otra talla o marca.'}
