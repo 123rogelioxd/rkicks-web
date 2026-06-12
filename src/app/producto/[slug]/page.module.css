@@ -22,6 +22,10 @@
   border-bottom: 1px solid var(--rk-border-0);
 }
 
+.purchaseTrustInline {
+  margin-top: var(--rk-sp-5);
+}
+
 /* ── Real Condition section ── */
 .rcgSection {
   padding-top: var(--rk-sp-7);

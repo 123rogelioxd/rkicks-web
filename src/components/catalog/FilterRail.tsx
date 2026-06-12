@@ -35,11 +35,11 @@ export default function FilterRail({ brands, sizes, active, onChange }: Props) {
   return (
     <div className={styles.rail}>
       {/* Size — highest priority per spec */}
-      <span className={styles.groupLabel}>Talla</span>
+      <span className={styles.groupLabel}>Talla MX</span>
       {sizes.map((s) => (
         <FilterChip
           key={s}
-          label={`US ${s}`}
+          label={`${s} MX`}
           active={active.sizes.includes(s)}
           onClick={() => onChange({ ...active, sizes: toggle(active.sizes, s) })}
         />

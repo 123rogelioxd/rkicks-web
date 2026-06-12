@@ -1,0 +1,131 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-4);
+}
+
+.checkout {
+  color: var(--rk-t-bone);
+}
+
+.stepsBlock {
+  padding: var(--rk-sp-4);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-md);
+}
+
+.checkout .stepsBlock {
+  background: rgba(240,234,224,0.08);
+  border-color: var(--rk-border-ink);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.checkout .eyebrow {
+  color: var(--rk-t-bone-dim);
+}
+
+.steps {
+  margin: var(--rk-sp-3) 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: var(--rk-sp-2);
+  font-family: var(--rk-font-sans);
+  font-size: 13px;
+  line-height: var(--rk-lh-normal);
+  color: var(--rk-t2);
+}
+
+.checkout .steps {
+  color: var(--rk-t-bone);
+}
+
+.apartado {
+  margin: var(--rk-sp-3) 0 0;
+  font-family: var(--rk-font-sans);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--rk-t1);
+}
+
+.checkout .apartado {
+  color: var(--rk-t-bone);
+}
+
+.reassurance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--rk-sp-2);
+}
+
+.reassurance span {
+  font-family: var(--rk-font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--rk-t2);
+}
+
+.checkout .reassurance span {
+  color: var(--rk-t-bone);
+}
+
+.badges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--rk-sp-2);
+}
+
+.badge {
+  min-height: 58px;
+  padding: 10px;
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-sm);
+  background: var(--rk-surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.checkout .badge {
+  background: rgba(240,234,224,0.08);
+  border-color: var(--rk-border-ink);
+}
+
+.badge span {
+  font-family: var(--rk-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.checkout .badge span {
+  color: var(--rk-t-bone-dim);
+}
+
+.badge strong {
+  font-family: var(--rk-font-sans);
+  font-size: 13px;
+  line-height: var(--rk-lh-snug);
+  color: var(--rk-t1);
+}
+
+.checkout .badge strong {
+  color: var(--rk-t-bone);
+}
+
+@media (max-width: 420px) {
+  .reassurance,
+  .badges {
+    grid-template-columns: 1fr;
+  }
+}

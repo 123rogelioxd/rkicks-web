@@ -10,6 +10,7 @@ import {
 } from '@/utils/whatsapp';
 import { addSelectedVariantToCart, isSelectedVariantInCart } from '@/utils/checkout-cart';
 import { conditionLabel, getAvailableVariants, getVariantPrimarySizeLabel } from '@/utils/inventory';
+import { trackEvent } from '@/utils/analytics';
 import type { Product, ProductVariant } from '@/types/product';
 import styles from './WhatsAppCTA.module.css';
 
@@ -89,6 +90,12 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
       }
 
       setMessage(null);
+      trackEvent('product_whatsapp_click', {
+        product_id: product.id,
+        product_slug: product.slug,
+        variant_id: actionableVariant?.id,
+        size_label: actionableVariant ? getVariantPrimarySizeLabel(product, actionableVariant) : null,
+      });
       openWhatsApp(buildProductMessage(product, actionableVariant));
     }
 
@@ -105,6 +112,12 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
     const result = addSelectedVariantToCart(product, actionableVariant, window.location.origin);
 
     if (result.ok) {
+      trackEvent('add_to_cart', {
+        product_id: product.id,
+        product_slug: product.slug,
+        variant_id: actionableVariant?.id,
+        size_label: actionableVariant ? getVariantPrimarySizeLabel(product, actionableVariant) : null,
+      });
       setSelectedInCart(true);
       setMessage(result.incremented ? 'Cantidad actualizada en carrito.' : 'Par agregado al carrito.');
       return;

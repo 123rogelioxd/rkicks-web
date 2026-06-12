@@ -42,7 +42,7 @@ export default function ProductCardFeatured({ product }: Props) {
 
         <div className={styles.meta}>
           {availableSizes.length > 0 && (
-            <span className={styles.availableSizes}>Available sizes: {availableSizes.join(' · ')}</span>
+            <span className={styles.availableSizes}>Tallas disponibles: {availableSizes.join(' / ')}</span>
           )}
           <ConditionChip condition={product.condition} />
           <FlawBar level={product.flawLevel} />

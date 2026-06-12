@@ -8,6 +8,7 @@ import {
   getVariantStatus,
   statusLabelES,
 } from '@/utils/inventory';
+import { trackEvent } from '@/utils/analytics';
 import StatusPill from '@/components/ui/StatusPill';
 import ConditionChip from '@/components/ui/ConditionChip';
 import FlawBar from '@/components/ui/FlawBar';
@@ -64,7 +65,16 @@ export default function ProductMeta({ product, selectedVariant, onSelectVariant 
                 type="button"
                 className={`${styles.variantChip} ${selected ? styles.variantChipSelected : ''}`}
                 disabled={!selectable}
-                onClick={() => selectable && onSelectVariant?.(variant)}
+                onClick={() => {
+                  if (!selectable) return;
+                  trackEvent('size_selected', {
+                    product_id: product.id,
+                    product_slug: product.slug,
+                    variant_id: variant.id,
+                    size_label: variant.sizeLabel,
+                  });
+                  onSelectVariant?.(variant);
+                }}
                 aria-pressed={selected}
               >
                 <span className={styles.variantSize}>{variant.sizeLabel}</span>
@@ -72,6 +82,12 @@ export default function ProductMeta({ product, selectedVariant, onSelectVariant 
               </button>
             );
           })}
+        </div>
+        <div className={styles.sizeHelp}>
+          <p>¿No sabes tu talla?</p>
+          <span>26 MX ≈ US 8</span>
+          <span>26.5 MX ≈ US 8.5</span>
+          <span>27 MX ≈ US 9</span>
         </div>
       </div>
 

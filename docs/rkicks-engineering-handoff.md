@@ -433,7 +433,7 @@ Poll `/api/products?ids={visible_ids}` every 60s while page is active. On status
 ### Message builder — `src/utils/whatsapp.js`
 
 ```javascript
-const WHATSAPP_NUMBER = "521XXXXXXXXXX"; // E.164 without +
+const WHATSAPP_NUMBER = "529516513018"; // E.164 without +
 
 function buildProductMessage(product) {
   const { id, model, size, condition } = product;

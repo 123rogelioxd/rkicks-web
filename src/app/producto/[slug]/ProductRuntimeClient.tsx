@@ -11,6 +11,7 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import RCGStamp from '@/components/rcg/RCGStamp';
 import CompleteTheFit from '@/components/ecosystem/CompleteTheFit';
 import { WhatsAppProductCTA } from '@/components/whatsapp/WhatsAppCTA';
+import PurchaseTrust from '@/components/conversion/PurchaseTrust';
 import Eyebrow from '@/components/ui/Eyebrow';
 import EmptyState from '@/components/ui/EmptyState';
 import Skeleton from '@/components/ui/Skeleton';
@@ -21,6 +22,7 @@ import {
   getPairingFromProduct,
   logRuntimeApi,
 } from '@/utils/api-products';
+import { trackEvent } from '@/utils/analytics';
 import styles from './page.module.css';
 
 interface Props {
@@ -49,6 +51,11 @@ export default function ProductRuntimeClient({
           const availableVariants = liveProduct.variants.filter((variant) => variant.status === 'available');
           setProduct(liveProduct);
           setSelectedVariant(availableVariants.length === 1 ? availableVariants[0] : null);
+          trackEvent('product_view', {
+            product_id: liveProduct.id,
+            product_slug: liveProduct.slug,
+            product_name: liveProduct.model,
+          });
         }
       } catch (error) {
         logRuntimeApi(`product load failed for ${slug}`, error);
@@ -132,7 +139,25 @@ export default function ProductRuntimeClient({
               selectedVariant={selectedVariant}
               onSelectVariant={setSelectedVariant}
             />
+            <div className={styles.purchaseTrustInline}>
+              <PurchaseTrust />
+            </div>
           </section>
+
+          {product.status !== 'sold' && (
+            <section className={styles.ctaSection}>
+              <WhatsAppProductCTA product={product} selectedVariant={selectedVariant} />
+            </section>
+          )}
+
+          {product.status === 'sold' && (
+            <section className={styles.soldSection}>
+              <p className={styles.soldNote}>Este par ya fue vendido.</p>
+              <Link href="/catalogo" className={styles.soldLink}>
+                Ver pares similares -&gt;
+              </Link>
+            </section>
+          )}
 
           <section className={styles.rcgSection}>
             <div className={styles.rcgHeader}>
@@ -155,21 +180,6 @@ export default function ProductRuntimeClient({
           {pairing && (
             <section className={styles.ctfSection}>
               <CompleteTheFit pairing={pairing} product={product} />
-            </section>
-          )}
-
-          {product.status !== 'sold' && (
-            <section className={styles.ctaSection}>
-              <WhatsAppProductCTA product={product} selectedVariant={selectedVariant} />
-            </section>
-          )}
-
-          {product.status === 'sold' && (
-            <section className={styles.soldSection}>
-              <p className={styles.soldNote}>Este par ya fue vendido.</p>
-              <Link href="/catalogo" className={styles.soldLink}>
-                Ver pares similares -&gt;
-              </Link>
             </section>
           )}
 

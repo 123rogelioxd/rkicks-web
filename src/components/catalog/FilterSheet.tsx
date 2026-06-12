@@ -71,12 +71,12 @@ export default function FilterSheet({ open, onClose, brands, sizes, active, onAp
         <div className={styles.body}>
           {/* Size */}
           <div className={styles.group}>
-            <p className={styles.groupLabel}>Talla (US)</p>
+            <p className={styles.groupLabel}>Talla MX</p>
             <div className={styles.sizeGrid}>
               {sizes.map((s) => (
                 <FilterChip
                   key={s}
-                  label={`${s}`}
+                  label={`${s} MX`}
                   active={local.sizes.includes(s)}
                   onClick={() => setLocal((p) => ({ ...p, sizes: toggle(p.sizes, s) }))}
                 />

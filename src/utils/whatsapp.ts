@@ -79,8 +79,8 @@ export function buildPreorderMessage(product: Product, selectedVariant?: Product
   );
 }
 
-export function buildSizeNotifyMessage(sizeUS: number): string {
-  return cleanMessage(`Hola, quisiera que me avisen cuando tengan pares en talla US ${sizeUS}.`);
+export function buildSizeNotifyMessage(sizeMx: number): string {
+  return cleanMessage(`Hola, quisiera que me avisen cuando tengan pares en talla ${sizeMx} MX.`);
 }
 
 export function buildGenericMessage(): string {

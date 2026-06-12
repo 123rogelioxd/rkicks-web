@@ -67,7 +67,7 @@ export default function CatalogClient({ initialQuery = '' }: Props) {
     [activeProducts]
   );
   const activeSizes = useMemo(
-    () => [...new Set(activeProducts.map((product) => product.size.us))].sort((a, b) => a - b),
+    () => [...new Set(activeProducts.flatMap(getProductMxSizes))].sort((a, b) => a - b),
     [activeProducts]
   );
 
@@ -88,7 +88,7 @@ export default function CatalogClient({ initialQuery = '' }: Props) {
       );
     }
     if (filters.brands.length)     list = list.filter((p) => filters.brands.includes(p.brand));
-    if (filters.sizes.length)      list = list.filter((p) => filters.sizes.includes(p.size.us));
+    if (filters.sizes.length)      list = list.filter((p) => getProductMxSizes(p).some((size) => filters.sizes.includes(size)));
     if (filters.statuses.length)   list = list.filter((p) => filters.statuses.includes(p.status));
     if (filters.conditions.length) list = list.filter((p) => filters.conditions.includes(p.condition));
 
@@ -225,4 +225,13 @@ export default function CatalogClient({ initialQuery = '' }: Props) {
       )}
     </div>
   );
+}
+
+function getProductMxSizes(product: Product): number[] {
+  const variantSizes = product.variants
+    .map((variant) => Number(String(variant.sizeMx ?? variant.sizeLabel).match(/\d+(?:\.\d+)?/)?.[0] ?? ''))
+    .filter((size) => Number.isFinite(size) && size > 0);
+
+  if (variantSizes.length > 0) return variantSizes;
+  return product.size.cm > 0 ? [product.size.cm] : [];
 }

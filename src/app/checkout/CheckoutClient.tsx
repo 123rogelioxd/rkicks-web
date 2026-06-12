@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import EmptyState from '@/components/ui/EmptyState';
 import ProductImage from '@/components/product/ProductImage';
+import PurchaseTrust from '@/components/conversion/PurchaseTrust';
 import type { Product } from '@/types/product';
 import {
   type CheckoutCartItem,
@@ -17,6 +18,7 @@ import { formatPrice } from '@/utils/currency';
 import { fetchLiveCatalog, logRuntimeApi } from '@/utils/api-products';
 import { getVariantPrimarySizeLabel } from '@/utils/inventory';
 import { getWhatsAppURL, buildRKicksCheckoutMessage } from '@/utils/whatsapp';
+import { trackEvent } from '@/utils/analytics';
 import styles from './page.module.css';
 
 export default function CheckoutClient() {
@@ -30,6 +32,9 @@ export default function CheckoutClient() {
     let cancelled = false;
     const storedItems = readCart();
     setItems(storedItems);
+    trackEvent('checkout_opened', {
+      item_count: storedItems.length,
+    });
 
     async function refreshAvailability() {
       try {
@@ -168,6 +173,8 @@ export default function CheckoutClient() {
                 <strong>{formatPrice(total)} MXN</strong>
               </div>
 
+              <PurchaseTrust variant="checkout" />
+
               <label className={styles.field}>
                 Nombre
                 <input
@@ -201,7 +208,12 @@ export default function CheckoutClient() {
                   if (!canFinalize) {
                     event.preventDefault();
                     if (canCheckout && !hasCustomerName) setNameError(true);
+                    return;
                   }
+                  trackEvent('checkout_whatsapp_sent', {
+                    item_count: items.length,
+                    total,
+                  });
                 }}
               >
                 Finalizar por WhatsApp

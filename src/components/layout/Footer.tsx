@@ -12,10 +12,10 @@ export default function Footer() {
         <div className={styles.right}>
           <p className={styles.copy}>© 2026 RKicks</p>
           <div className={styles.socialRow}>
-            <a href="https://instagram.com" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
+            <a href="https://instagram.com/rsupply.kicks" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
               Instagram
             </a>
-            <a href="https://wa.me/521XXXXXXXXXX" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/529516513018" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
               WhatsApp
             </a>
           </div>
