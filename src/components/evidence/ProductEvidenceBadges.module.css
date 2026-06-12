@@ -1,0 +1,47 @@
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rk-sp-2);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 6px 9px;
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-sm);
+  font-family: var(--rk-font-sans);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--rk-t2);
+  background: var(--rk-surface);
+}
+
+.complete {
+  color: var(--rk-t1);
+}
+
+.complete span {
+  color: var(--rk-available);
+}
+
+.pending {
+  color: var(--rk-t3);
+}
+
+.cta {
+  padding: var(--rk-sp-3);
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-md);
+  background: var(--rk-surface);
+}
+
+@media (max-width: 420px) {
+  .badge {
+    flex: 1 1 calc(50% - var(--rk-sp-2));
+    justify-content: flex-start;
+  }
+}

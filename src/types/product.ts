@@ -3,6 +3,17 @@ export type ConditionGrade = 'new' | 'like-new' | 'excellent' | 'good' | 'fair';
 export type FlawLevel      = 'none' | 'minor' | 'visible' | 'heavy';
 export type BoxStatus      = 'original' | 'replacement' | 'none';
 export type PhotoType      = 'editorial' | 'condition' | 'detail' | 'lifestyle';
+export type EvidencePhotoType =
+  | 'front'
+  | 'left_side'
+  | 'right_side'
+  | 'heel'
+  | 'outsole'
+  | 'size_tag'
+  | 'box_label'
+  | 'top_down'
+  | 'defect_closeup'
+  | 'receipt';
 
 export interface Flaw {
   id:          number;
@@ -13,9 +24,10 @@ export interface Flaw {
 }
 
 export interface Photo {
-  url:  string;
-  type: PhotoType;
-  alt:  string;
+  url:           string;
+  type:          PhotoType;
+  alt:           string;
+  evidenceType?: EvidencePhotoType;
 }
 
 export interface ProductSize {

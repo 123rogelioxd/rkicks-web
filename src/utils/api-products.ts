@@ -5,6 +5,7 @@ import type {
   FlawLevel,
   Pairing,
   Photo,
+  EvidencePhotoType,
   PhotoType,
   Product,
   ProductVariant,
@@ -88,6 +89,23 @@ export async function fetchLiveProductBySlug(slug: string): Promise<Product | nu
   return mapApiProduct(data);
 }
 
+export async function fetchStaticProductBySlug(slug: string): Promise<Product | null> {
+  const encodedSlug = encodeURIComponent(slug);
+  try {
+    const response = await fetch(`${RKICKS_API_BASE}/products/${encodedSlug}`, {
+      headers: { Accept: 'application/json' },
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json() as ApiProduct;
+    if (!isPublicAvailableApiProduct(data)) return null;
+    return mapApiProduct(data);
+  } catch (error) {
+    logRuntimeApi(`static product fallback failed for ${slug}`, error);
+    return null;
+  }
+}
+
 export function getPairingFromProduct(product: Product): Pairing | null {
   if (!product.pairing) return null;
 
@@ -130,10 +148,10 @@ export function mapApiProduct(apiProduct: ApiProduct): Product | null {
     flaws: mapFlaws(apiProduct.flaws, conditionReport),
     box: mapBox(conditionReport?.box_status ?? apiProduct.box_status),
     photos: photoUrls.length > 0
-      ? photoUrls.map((url, index) => ({
-          url,
-          type: index === 0 ? 'editorial' : 'condition',
-          alt: `${brand} ${model}${subtitle ? ` ${subtitle}` : ''}`,
+      ? photoUrls.map((photo, index) => ({
+          ...photo,
+          type: photo.type ?? (index === 0 ? 'editorial' : 'condition'),
+          alt: photo.alt || `${brand} ${model}${subtitle ? ` ${subtitle}` : ''}`,
         }))
       : [{
           url: '',
@@ -304,10 +322,45 @@ function mapBox(box: unknown): BoxStatus {
 
 function mapPhotoType(type: unknown, fallback: PhotoType): PhotoType {
   const normalized = normalize(type);
+  if (isEvidencePhotoType(normalized)) {
+    if (normalized === 'defect_closeup') return 'condition';
+    if (normalized === 'receipt') return 'detail';
+    return 'detail';
+  }
   if (normalized === 'condition') return 'condition';
   if (normalized === 'detail') return 'detail';
   if (normalized === 'lifestyle') return 'lifestyle';
   return fallback;
+}
+
+function mapEvidencePhotoType(type: unknown, fallback?: EvidencePhotoType): EvidencePhotoType | undefined {
+  const normalized = normalize(type);
+  if (normalized === 'principal' || normalized === 'primary' || normalized === 'editorial') return fallback ?? 'front';
+  if (normalized === 'left' || normalized === 'left_side' || normalized === 'lateral_left') return 'left_side';
+  if (normalized === 'right' || normalized === 'right_side' || normalized === 'lateral_right') return 'right_side';
+  if (normalized === 'back' || normalized === 'heel') return 'heel';
+  if (normalized === 'sole' || normalized === 'outsole') return 'outsole';
+  if (normalized === 'size' || normalized === 'size_tag' || normalized === 'label_size') return 'size_tag';
+  if (normalized === 'box' || normalized === 'box_label') return 'box_label';
+  if (normalized === 'top' || normalized === 'top_down' || normalized === 'topdown') return 'top_down';
+  if (normalized === 'flaw' || normalized === 'defect' || normalized === 'defect_closeup') return 'defect_closeup';
+  if (normalized === 'receipt' || normalized === 'proof' || normalized === 'proof_of_purchase') return 'receipt';
+  return fallback;
+}
+
+function isEvidencePhotoType(value: string): value is EvidencePhotoType {
+  return [
+    'front',
+    'left_side',
+    'right_side',
+    'heel',
+    'outsole',
+    'size_tag',
+    'box_label',
+    'top_down',
+    'defect_closeup',
+    'receipt',
+  ].includes(value);
 }
 
 function mapFlaws(flaws: unknown, conditionReport: ApiProduct['condition_report']): Flaw[] {
@@ -337,7 +390,7 @@ function mapFlaws(flaws: unknown, conditionReport: ApiProduct['condition_report'
   return [];
 }
 
-function getPhotoUrls(apiProduct: ApiProduct): string[] {
+function getPhotoUrls(apiProduct: ApiProduct): Photo[] {
   const photos: Photo[] = [];
   const primaryPhotoUrl = cleanUrl(apiProduct.primary_photo_url ?? apiProduct.primaryPhotoUrl);
   const photoUrl = cleanUrl(apiProduct.photo_url ?? apiProduct.photoUrl);
@@ -347,6 +400,7 @@ function getPhotoUrls(apiProduct: ApiProduct): string[] {
       url: primaryPhotoUrl,
       type: 'editorial',
       alt: stringOr(apiProduct.model, 'Sneaker RKicks'),
+      evidenceType: 'front',
     });
   }
 
@@ -355,6 +409,7 @@ function getPhotoUrls(apiProduct: ApiProduct): string[] {
       url: photoUrl,
       type: 'condition',
       alt: stringOr(apiProduct.model, 'Sneaker RKicks'),
+      evidenceType: 'top_down',
     });
   }
 
@@ -363,7 +418,12 @@ function getPhotoUrls(apiProduct: ApiProduct): string[] {
       if (typeof photo === 'string') {
         const url = cleanUrl(photo);
         if (url) {
-          photos.push({ url, type: index === 0 ? 'editorial' : 'condition', alt: stringOr(apiProduct.model, 'Sneaker RKicks') });
+        photos.push({
+          url,
+          type: index === 0 ? 'editorial' : 'condition',
+          alt: stringOr(apiProduct.model, 'Sneaker RKicks'),
+          evidenceType: mapEvidencePhotoType(undefined, index === 0 ? 'front' : undefined),
+        });
         }
         return;
       }
@@ -376,11 +436,17 @@ function getPhotoUrls(apiProduct: ApiProduct): string[] {
         url,
         type: mapPhotoType(photo.type, index === 0 ? 'editorial' : 'condition'),
         alt: stringOr(photo.alt, stringOr(apiProduct.model, 'Sneaker RKicks')),
+        evidenceType: mapEvidencePhotoType(photo.evidence_type ?? photo.evidenceType ?? photo.photo_type ?? photo.type, index === 0 ? 'front' : undefined),
       });
     });
   }
 
-  return [...new Set(photos.map((photo) => photo.url).filter(Boolean))];
+  const seen = new Set<string>();
+  return photos.filter((photo) => {
+    if (!photo.url || seen.has(photo.url)) return false;
+    seen.add(photo.url);
+    return true;
+  });
 }
 
 function cleanUrl(value: unknown): string {

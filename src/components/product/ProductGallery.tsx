@@ -89,7 +89,7 @@ export default function ProductGallery({ photos, brand, model }: Props) {
         )}
 
         <span className={styles.counter} aria-label={`Foto ${activeIdx + 1} de ${total}`}>
-          {activeIdx + 1}&thinsp;/&thinsp;{total}
+          {total} {total === 1 ? 'Photo' : 'Photos'}
         </span>
       </div>
 

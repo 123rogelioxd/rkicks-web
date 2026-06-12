@@ -12,6 +12,8 @@ import RCGStamp from '@/components/rcg/RCGStamp';
 import CompleteTheFit from '@/components/ecosystem/CompleteTheFit';
 import { WhatsAppProductCTA } from '@/components/whatsapp/WhatsAppCTA';
 import PurchaseTrust from '@/components/conversion/PurchaseTrust';
+import ProductEvidenceBadges from '@/components/evidence/ProductEvidenceBadges';
+import NewVerified from '@/components/evidence/NewVerified';
 import Eyebrow from '@/components/ui/Eyebrow';
 import EmptyState from '@/components/ui/EmptyState';
 import Skeleton from '@/components/ui/Skeleton';
@@ -27,15 +29,20 @@ import styles from './page.module.css';
 
 interface Props {
   slug: string;
+  initialProduct?: Product | null;
 }
 
 export default function ProductRuntimeClient({
   slug,
+  initialProduct = null,
 }: Props) {
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Product | null>(initialProduct);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(() => {
+    const availableVariants = initialProduct?.variants.filter((variant) => variant.status === 'available') ?? [];
+    return availableVariants.length === 1 ? availableVariants[0] : null;
+  });
+  const [loading, setLoading] = useState(!initialProduct);
   const [productError, setProductError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -59,7 +66,7 @@ export default function ProductRuntimeClient({
         }
       } catch (error) {
         logRuntimeApi(`product load failed for ${slug}`, error);
-        if (!cancelled) {
+        if (!cancelled && !initialProduct) {
           setProduct(null);
           setProductError('No pudimos cargar este producto en vivo.');
         }
@@ -146,6 +153,7 @@ export default function ProductRuntimeClient({
 
           {product.status !== 'sold' && (
             <section className={styles.ctaSection}>
+              <ProductEvidenceBadges product={product} variant="cta" />
               <WhatsAppProductCTA product={product} selectedVariant={selectedVariant} />
             </section>
           )}
@@ -171,8 +179,12 @@ export default function ProductRuntimeClient({
             </div>
 
             <div className={styles.rcgBody}>
+              <ProductEvidenceBadges product={product} />
+              <NewVerified product={product} />
               <ConditionTable product={product} selectedVariant={selectedVariant} />
-              <FlawMap flaws={product.flaws} flawLevel={product.flawLevel} />
+              {product.flaws.length > 0 && (
+                <FlawMap flaws={product.flaws} flawLevel={product.flawLevel} />
+              )}
               <AuthenticityBlock product={product} />
             </div>
           </section>

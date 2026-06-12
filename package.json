@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
+    "test:evidence": "node scripts/verify-evidence-layer.mjs",
     "verify:live-catalog": "node scripts/verify-live-catalog.mjs",
     "verify:checkout-flow": "node scripts/verify-checkout-flow.mjs",
     "verify:static-export": "node scripts/verify-static-export.mjs",
