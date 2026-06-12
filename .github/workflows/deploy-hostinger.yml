@@ -22,14 +22,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static export
+      - name: Build Next app
         run: npm run build
 
-      - name: Verify runtime API bridge files
-        run: |
-          test -f out/api/rkicks/catalog.php
-          test -f out/api/rkicks/product.php
-          ls -la out/api/rkicks
+      - name: Verify static export
+        run: npm run verify:static-export
 
       - name: Install lftp
         run: |

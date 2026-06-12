@@ -17,7 +17,7 @@ export default function ProductCardFeatured({ product }: Props) {
   const editorial = product.photos.find((p) => p.type === 'editorial') ?? product.photos[0];
 
   return (
-    <Link href={`/producto/${product.slug}`} className={styles.card}>
+    <Link href={`/producto?slug=${encodeURIComponent(product.slug)}`} className={styles.card}>
       <div className={styles.imageWrap}>
         <ProductImage
           src={editorial?.url ?? ''}

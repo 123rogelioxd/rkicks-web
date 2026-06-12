@@ -19,7 +19,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
 
   return (
     <Link
-      href={`/producto/${product.slug}`}
+      href={`/producto?slug=${encodeURIComponent(product.slug)}`}
       className={`${styles.card} ${product.status === 'sold' ? styles.sold : ''} ${variant === 'compact' ? styles.compact : ''}`}
     >
       <div className={styles.imageWrap}>

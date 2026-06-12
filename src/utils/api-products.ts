@@ -49,26 +49,35 @@ export type ApiProduct = Record<string, unknown> & {
     verified_at?: string | null;
   } | null;
   complete_the_fit?: unknown;
+  published?: boolean | null;
 };
 
 export async function fetchLiveCatalog(): Promise<Product[]> {
-  const data = await fetchRuntimeJson<ApiProduct[]>('/api/rkicks/catalog/', '/catalog');
+  const data = await fetchNoStoreJson<ApiProduct[]>(cacheBust(`${RKICKS_API_BASE}/catalog`));
   if (!Array.isArray(data)) throw new Error('RKicks API catalog response was not an array');
-  return data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
+  return data
+    .filter(isPublicAvailableApiProduct)
+    .map(mapApiProduct)
+    .filter((product): product is Product => Boolean(product));
 }
 
 export async function fetchPublicCatalog(): Promise<Product[]> {
+  return fetchLiveCatalog();
+}
+
+export async function fetchCatalogSlugs(): Promise<string[]> {
   const data = await fetchNoStoreJson<ApiProduct[]>(cacheBust(`${RKICKS_API_BASE}/catalog`));
   if (!Array.isArray(data)) throw new Error('RKicks API catalog response was not an array');
-  return data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
+  return data
+    .filter(isPublicAvailableApiProduct)
+    .map((product) => product.slug)
+    .filter((slug): slug is string => Boolean(slug));
 }
 
 export async function fetchLiveProductBySlug(slug: string): Promise<Product | null> {
   const encodedSlug = encodeURIComponent(slug);
-  const data = await fetchRuntimeJson<ApiProduct>(
-    `/api/rkicks/products/${encodedSlug}/`,
-    `/products/${encodedSlug}`
-  );
+  const data = await fetchNoStoreJson<ApiProduct>(cacheBust(`${RKICKS_API_BASE}/products/${encodedSlug}`));
+  if (!isPublicAvailableApiProduct(data)) return null;
   return mapApiProduct(data);
 }
 
@@ -127,35 +136,24 @@ export function mapApiProduct(apiProduct: ApiProduct): Product | null {
   };
 }
 
-async function fetchRuntimeJson<T>(sameOriginPath: string, apiPath: string): Promise<T> {
-  try {
-    return await fetchJsonUrl<T>(cacheBust(sameOriginPath), 'same-origin');
-  } catch (sameOriginError) {
-    logRuntimeApi('fallback reason', sameOriginError);
-    return fetchJsonUrl<T>(cacheBust(`${RKICKS_API_BASE}${apiPath}`), 'direct-api');
-  }
-}
-
 function cacheBust(url: string): string {
   const separator = url.includes('?') ? '&' : '?';
   return `${url}${separator}_=${Date.now()}`;
 }
 
-async function fetchJsonUrl<T>(url: string, source: 'same-origin' | 'direct-api'): Promise<T> {
+async function fetchNoStoreJson<T>(url: string): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
 
   try {
-    logRuntimeApi('attempt', { source, url });
     const response = await fetch(url, {
       cache: 'no-store',
       headers: {
         Accept: 'application/json',
+        'Cache-Control': 'no-cache',
       },
       signal: controller.signal,
     });
-
-    logRuntimeApi('response', { source, url, status: response.status });
 
     if (!response.ok) {
       throw new Error(`RKicks API request failed with ${response.status}`);
@@ -167,22 +165,6 @@ async function fetchJsonUrl<T>(url: string, source: 'same-origin' | 'direct-api'
   }
 }
 
-async function fetchNoStoreJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
-    cache: 'no-store',
-    headers: {
-      Accept: 'application/json',
-      'Cache-Control': 'no-cache',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`RKicks API request failed with ${response.status}`);
-  }
-
-  return response.json() as Promise<T>;
-}
-
 export function logRuntimeApi(message: string, details?: unknown): void {
   if (!shouldLogRuntimeApi()) return;
   console.info(`[rkicks-runtime-api] ${message}`, details ?? '');
@@ -190,6 +172,10 @@ export function logRuntimeApi(message: string, details?: unknown): void {
 
 function shouldLogRuntimeApi(): boolean {
   return process.env.NODE_ENV !== 'production' || ENABLE_PRODUCTION_API_DEBUG;
+}
+
+function isPublicAvailableApiProduct(product: ApiProduct): boolean {
+  return product.published !== false && mapStatus(product.availability) === 'available' && Boolean(product.slug);
 }
 
 function mapStatus(status: unknown): ProductStatus {
