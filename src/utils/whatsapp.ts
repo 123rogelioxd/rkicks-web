@@ -1,25 +1,32 @@
-import type { Product } from '@/types/product';
-import { conditionLabel } from './inventory';
+import type { Product, ProductVariant } from '@/types/product';
+import { getVariantPrice } from './inventory';
+import { formatPrice } from './currency';
 
 const WHATSAPP_NUMBER = '521XXXXXXXXXX'; // Replace with actual number
 
-export function buildProductMessage(product: Product): string {
-  const sizeStr = `US ${product.size.us}`;
-  const condStr = conditionLabel[product.condition];
+export function buildProductMessage(
+  product: Product,
+  selectedVariant?: ProductVariant | null,
+  productUrl?: string
+): string {
+  const sizeStr = selectedVariant?.sizeLabel ?? `US ${product.size.us}`;
+  const priceStr = `${formatPrice(getVariantPrice(product, selectedVariant))} MXN`;
+  const urlStr = productUrl ? ` - ${productUrl}` : '';
+
   return encodeURIComponent(
-    `Hola, me interesa: ${product.id} · ${product.model} · ${sizeStr} · ${condStr}`
+    `Hola, me interesa: ${product.model} - ${sizeStr} - ${priceStr}${urlStr}`
   );
 }
 
 export function buildReservedMessage(product: Product): string {
   return encodeURIComponent(
-    `Hola, quiero unirme a la lista de espera: ${product.id} · ${product.model} · US ${product.size.us}`
+    `Hola, quiero unirme a la lista de espera: ${product.id} - ${product.model} - US ${product.size.us}`
   );
 }
 
 export function buildPreorderMessage(product: Product): string {
   return encodeURIComponent(
-    `Hola, quiero reservar: ${product.id} · ${product.model} · US ${product.size.us}`
+    `Hola, quiero reservar: ${product.id} - ${product.model} - US ${product.size.us}`
   );
 }
 
@@ -37,7 +44,7 @@ export function buildGenericMessage(): string {
 
 export function buildCombinedMessage(product: Product, fragranceName: string): string {
   return encodeURIComponent(
-    `Hola, me interesan: ${product.id} · ${product.model} · US ${product.size.us} + ${fragranceName} de RDecants.`
+    `Hola, me interesan: ${product.id} - ${product.model} - US ${product.size.us} + ${fragranceName} de RDecants.`
   );
 }
 

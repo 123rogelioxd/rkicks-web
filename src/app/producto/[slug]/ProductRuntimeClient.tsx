@@ -14,7 +14,7 @@ import { WhatsAppProductCTA } from '@/components/whatsapp/WhatsAppCTA';
 import Eyebrow from '@/components/ui/Eyebrow';
 import EmptyState from '@/components/ui/EmptyState';
 import Skeleton from '@/components/ui/Skeleton';
-import type { Product } from '@/types/product';
+import type { Product, ProductVariant } from '@/types/product';
 import {
   fetchLiveCatalog,
   fetchLiveProductBySlug,
@@ -32,6 +32,7 @@ export default function ProductRuntimeClient({
 }: Props) {
   const [product, setProduct] = useState<Product | null>(null);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [loading, setLoading] = useState(true);
   const [productError, setProductError] = useState<string | null>(null);
 
@@ -44,7 +45,11 @@ export default function ProductRuntimeClient({
       try {
         const liveProduct = await fetchLiveProductBySlug(slug);
         if (!liveProduct) throw new Error(`RKicks product ${slug} was not found in the live API`);
-        if (!cancelled) setProduct(liveProduct);
+        if (!cancelled) {
+          const availableVariants = liveProduct.variants.filter((variant) => variant.status === 'available');
+          setProduct(liveProduct);
+          setSelectedVariant(availableVariants.length === 1 ? availableVariants[0] : null);
+        }
       } catch (error) {
         logRuntimeApi(`product load failed for ${slug}`, error);
         if (!cancelled) {
@@ -122,7 +127,11 @@ export default function ProductRuntimeClient({
       <main className={`rk-zone-bone ${styles.content}`}>
         <div className={`rk-page ${styles.inner}`}>
           <section className={styles.metaSection}>
-            <ProductMeta product={product} />
+            <ProductMeta
+              product={product}
+              selectedVariant={selectedVariant}
+              onSelectVariant={setSelectedVariant}
+            />
           </section>
 
           <section className={styles.rcgSection}>
@@ -151,7 +160,7 @@ export default function ProductRuntimeClient({
 
           {product.status !== 'sold' && (
             <section className={styles.ctaSection}>
-              <WhatsAppProductCTA product={product} />
+              <WhatsAppProductCTA product={product} selectedVariant={selectedVariant} />
             </section>
           )}
 

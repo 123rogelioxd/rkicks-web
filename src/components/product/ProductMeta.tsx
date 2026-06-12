@@ -1,6 +1,6 @@
-import type { Product } from '@/types/product';
+import type { Product, ProductVariant } from '@/types/product';
 import { formatPrice } from '@/utils/currency';
-import { conditionLabel, flawLevelLabelES } from '@/utils/inventory';
+import { conditionLabel, flawLevelLabelES, getVariantPrice, statusLabelES } from '@/utils/inventory';
 import StatusPill from '@/components/ui/StatusPill';
 import ConditionChip from '@/components/ui/ConditionChip';
 import FlawBar from '@/components/ui/FlawBar';
@@ -8,9 +8,13 @@ import styles from './ProductMeta.module.css';
 
 interface Props {
   product: Product;
+  selectedVariant?: ProductVariant | null;
+  onSelectVariant?: (variant: ProductVariant) => void;
 }
 
-export default function ProductMeta({ product }: Props) {
+export default function ProductMeta({ product, selectedVariant, onSelectVariant }: Props) {
+  const displayedPrice = getVariantPrice(product, selectedVariant);
+
   return (
     <div className={styles.meta}>
       {/* Eyebrow — brand + category */}
@@ -26,27 +30,33 @@ export default function ProductMeta({ product }: Props) {
 
       {/* Price — dominant */}
       <div className={styles.priceRow}>
-        <span className={styles.price}>{formatPrice(product.price)}</span>
+        <span className={styles.price}>{formatPrice(displayedPrice)}</span>
         <span className={styles.currency}>MXN</span>
         <StatusPill status={product.status} />
       </div>
 
-      {/* Size chips */}
-      <div className={styles.sizeRow}>
-        <span className={styles.sizeChip}>
-          <span className={styles.sizeLabel}>US</span>
-          {product.size.us}
-        </span>
-        <span className={styles.sizeDivider} aria-hidden="true" />
-        <span className={styles.sizeChip}>
-          <span className={styles.sizeLabel}>EUR</span>
-          {product.size.eur}
-        </span>
-        <span className={styles.sizeDivider} aria-hidden="true" />
-        <span className={styles.sizeChip}>
-          <span className={styles.sizeLabel}>CM</span>
-          {product.size.cm}
-        </span>
+      <div className={styles.selectorBlock}>
+        <p className={styles.selectorTitle}>Select size</p>
+        <div className={styles.variantGrid}>
+          {product.variants.map((variant) => {
+            const selectable = variant.status === 'available';
+            const selected = selectedVariant?.id === variant.id;
+
+            return (
+              <button
+                key={variant.id}
+                type="button"
+                className={`${styles.variantChip} ${selected ? styles.variantChipSelected : ''}`}
+                disabled={!selectable}
+                onClick={() => selectable && onSelectVariant?.(variant)}
+                aria-pressed={selected}
+              >
+                <span className={styles.variantSize}>{variant.sizeLabel}</span>
+                <span className={styles.variantStatus}>{statusLabelES[variant.status]}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Condition + flaw bar row */}

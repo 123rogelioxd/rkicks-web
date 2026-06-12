@@ -126,5 +126,13 @@
   text-align: center;
 }
 
+.stickyMessage {
+  font-family: var(--rk-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rk-t-bone);
+  text-align: center;
+}
+
 /* WhatsApp icon */
 .waIcon { flex-shrink: 0; }

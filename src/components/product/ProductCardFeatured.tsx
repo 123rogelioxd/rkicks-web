@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Product } from '@/types/product';
 import { formatPrice } from '@/utils/currency';
+import { getAvailableSizeLabels } from '@/utils/inventory';
 import StatusPill from '@/components/ui/StatusPill';
 import ConditionChip from '@/components/ui/ConditionChip';
 import FlawDot from '@/components/ui/FlawDot';
@@ -15,6 +16,7 @@ interface Props {
 
 export default function ProductCardFeatured({ product }: Props) {
   const editorial = product.photos.find((p) => p.type === 'editorial') ?? product.photos[0];
+  const availableSizes = getAvailableSizeLabels(product);
 
   return (
     <Link href={`/producto?slug=${encodeURIComponent(product.slug)}`} className={styles.card}>
@@ -39,7 +41,9 @@ export default function ProductCardFeatured({ product }: Props) {
         )}
 
         <div className={styles.meta}>
-          <span className={styles.sizeLabel}>US {product.size.us}</span>
+          {availableSizes.length > 0 && (
+            <span className={styles.availableSizes}>Available sizes: {availableSizes.join(' · ')}</span>
+          )}
           <ConditionChip condition={product.condition} />
           <FlawBar level={product.flawLevel} />
         </div>

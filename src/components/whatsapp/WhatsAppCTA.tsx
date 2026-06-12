@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
   openWhatsApp,
   buildGenericMessage,
@@ -6,8 +7,8 @@ import {
   buildReservedMessage,
   buildPreorderMessage,
 } from '@/utils/whatsapp';
-import { conditionLabel } from '@/utils/inventory';
-import type { Product } from '@/types/product';
+import { conditionLabel, getAvailableVariants } from '@/utils/inventory';
+import type { Product, ProductVariant } from '@/types/product';
 import styles from './WhatsAppCTA.module.css';
 
 function WAIcon() {
@@ -20,13 +21,12 @@ function WAIcon() {
   );
 }
 
-/* ── Homepage section ── */
 export function WhatsAppSection() {
   return (
     <section className={styles.section}>
       <div className={styles.sectionInner}>
         <p className={styles.sectionSub}>Curado por gente que sabe</p>
-        <h2 className={styles.sectionHeading}>¿Tienes preguntas sobre algún par?</h2>
+        <h2 className={styles.sectionHeading}>Tienes preguntas sobre algun par?</h2>
         <button
           type="button"
           className={styles.btn}
@@ -40,28 +40,41 @@ export function WhatsAppSection() {
   );
 }
 
-/* ── Product page CTA ── */
 interface ProductCTAProps {
   product: Product;
+  selectedVariant?: ProductVariant | null;
 }
 
-export function WhatsAppProductCTA({ product }: ProductCTAProps) {
+export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps) {
+  const [message, setMessage] = useState<string | null>(null);
+  const availableVariants = getAvailableVariants(product);
   const ctaLabel = {
-    available:   'Preguntar por WhatsApp',
-    reserved:    'Unirse a la lista de espera',
+    available: 'Preguntar por WhatsApp',
+    reserved: 'Unirse a la lista de espera',
     'pre-order': 'Reservar mi par',
-    sold:        null,
+    sold: null,
   }[product.status];
 
   const handleClick = () => {
-    if (product.status === 'available')  openWhatsApp(buildProductMessage(product));
-    if (product.status === 'reserved')   openWhatsApp(buildReservedMessage(product));
-    if (product.status === 'pre-order')  openWhatsApp(buildPreorderMessage(product));
+    if (product.status === 'available') {
+      if (!selectedVariant && availableVariants.length > 1) {
+        setMessage('Selecciona una talla antes de abrir WhatsApp.');
+        return;
+      }
+
+      setMessage(null);
+      openWhatsApp(buildProductMessage(product, selectedVariant, window.location.href));
+    }
+
+    if (product.status === 'reserved') openWhatsApp(buildReservedMessage(product));
+    if (product.status === 'pre-order') openWhatsApp(buildPreorderMessage(product));
   };
 
   if (!ctaLabel) return null;
 
-  const meta = `${product.id} · US ${product.size.us} · ${conditionLabel[product.condition]}`;
+  const variantSizes = availableVariants.map((variant) => variant.sizeLabel).join(' / ');
+  const metaSize = selectedVariant?.sizeLabel ?? (variantSizes || `US ${product.size.us}`);
+  const meta = `${product.id} - ${metaSize} - ${conditionLabel[product.condition]}`;
 
   return (
     <div className={styles.sticky}>
@@ -76,11 +89,11 @@ export function WhatsAppProductCTA({ product }: ProductCTAProps) {
         </span>
       </button>
       <p className={styles.stickyMeta}>{meta}</p>
+      {message && <p className={styles.stickyMessage}>{message}</p>}
     </div>
   );
 }
 
-/* ── Default export: inline full-width button ── */
 interface Props {
   product?: Product;
   label?: string;
@@ -89,7 +102,7 @@ interface Props {
 export default function WhatsAppCTA({ product, label }: Props) {
   const handleClick = () => {
     if (product) openWhatsApp(buildProductMessage(product));
-    else         openWhatsApp(buildGenericMessage());
+    else openWhatsApp(buildGenericMessage());
   };
 
   return (

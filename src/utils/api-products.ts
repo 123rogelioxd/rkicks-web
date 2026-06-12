@@ -7,6 +7,7 @@ import type {
   Photo,
   PhotoType,
   Product,
+  ProductVariant,
   ProductStatus,
 } from '@/types/product';
 
@@ -25,12 +26,15 @@ export type ApiProduct = Record<string, unknown> & {
   size_mx?: string | number | null;
   size_eu?: string | number | null;
   size_cm?: string | number | null;
+  size?: string | number | null;
   price?: string | number | null;
   condition?: string | null;
   flaw_level?: string | null;
   flaws?: unknown;
   box_status?: string | null;
   availability?: string | null;
+  available_sizes?: unknown;
+  variants?: unknown;
   photo_url?: string | null;
   primary_photo_url?: string | null;
   photoUrl?: string | null;
@@ -100,6 +104,8 @@ export function mapApiProduct(apiProduct: ApiProduct): Product | null {
   const conditionReport = apiProduct.condition_report;
   const photoUrls = getPhotoUrls(apiProduct);
   const subtitle = getSubtitle(apiProduct);
+  const variants = mapVariants(apiProduct);
+  const price = getProductPrice(apiProduct, variants);
 
   return {
     id: formatProductId(apiProduct.id),
@@ -113,8 +119,9 @@ export function mapApiProduct(apiProduct: ApiProduct): Product | null {
       eur: numberOr(apiProduct.size_eu, estimateEurFromUs(apiProduct.size_us)),
       cm: numberOr(apiProduct.size_cm, numberOr(apiProduct.size_mx, 0)),
     },
-    price: numberOr(apiProduct.price, 0),
-    status: mapStatus(apiProduct.availability),
+    price,
+    status: getProductStatus(apiProduct, variants),
+    variants,
     condition: mapCondition(conditionReport?.condition_grade ?? apiProduct.condition),
     flawLevel: mapFlawLevel(conditionReport?.flaw_level ?? apiProduct.flaw_level),
     flaws: mapFlaws(apiProduct.flaws, conditionReport),
@@ -175,7 +182,83 @@ function shouldLogRuntimeApi(): boolean {
 }
 
 function isPublicAvailableApiProduct(product: ApiProduct): boolean {
-  return product.published !== false && mapStatus(product.availability) === 'available' && Boolean(product.slug);
+  return product.published !== false && productHasAvailableVariant(product) && Boolean(product.slug);
+}
+
+function productHasAvailableVariant(product: ApiProduct): boolean {
+  const variants = mapVariants(product);
+  if (variants.length > 0) {
+    return variants.some((variant) => variant.status === 'available');
+  }
+
+  return mapStatus(product.availability) === 'available';
+}
+
+function getProductStatus(apiProduct: ApiProduct, variants: ProductVariant[]): ProductStatus {
+  if (variants.some((variant) => variant.status === 'available')) return 'available';
+  return variants[0]?.status ?? mapStatus(apiProduct.availability);
+}
+
+function getProductPrice(apiProduct: ApiProduct, variants: ProductVariant[]): number {
+  const availablePrices = variants
+    .filter((variant) => variant.status === 'available')
+    .map((variant) => variant.salePrice)
+    .filter((price): price is number => typeof price === 'number' && price > 0);
+
+  return availablePrices[0] ?? numberOr(apiProduct.price, 0);
+}
+
+function mapVariants(apiProduct: ApiProduct): ProductVariant[] {
+  if (Array.isArray(apiProduct.variants) && apiProduct.variants.length > 0) {
+    return apiProduct.variants
+      .map((variant, index) => mapVariantRecord(variant, index))
+      .filter((variant): variant is ProductVariant => Boolean(variant));
+  }
+
+  const availableSizes = getStringArray(apiProduct.available_sizes);
+  if (availableSizes.length > 0) {
+    return availableSizes.map((sizeLabel, index) => ({
+      id: `${formatProductId(apiProduct.id)}-size-${index + 1}`,
+      sizeLabel,
+      status: 'available',
+      salePrice: numberOr(apiProduct.price, 0),
+    }));
+  }
+
+  const legacySize = getLegacySizeLabel(apiProduct);
+  if (!legacySize) return [];
+
+  return [{
+    id: `${formatProductId(apiProduct.id)}-legacy-size`,
+    sizeLabel: legacySize,
+    status: mapStatus(apiProduct.availability),
+    salePrice: numberOr(apiProduct.price, 0),
+  }];
+}
+
+function mapVariantRecord(variant: unknown, index: number): ProductVariant | null {
+  if (!isRecord(variant)) return null;
+
+  const sizeLabel = stringOr(variant.size_label ?? variant.sizeLabel ?? variant.size, '').trim();
+  if (!sizeLabel) return null;
+
+  return {
+    id: stringOr(variant.id, `variant-${index + 1}`),
+    sizeLabel,
+    status: mapStatus(variant.status ?? variant.availability),
+    salePrice: numberOr(variant.sale_price ?? variant.salePrice ?? variant.price, 0),
+  };
+}
+
+function getLegacySizeLabel(apiProduct: ApiProduct): string {
+  const explicit = stringOr(apiProduct.size, '').trim();
+  if (explicit) return explicit;
+
+  const mx = stringOr(apiProduct.size_mx ?? apiProduct.size_cm, '').trim();
+  if (mx) return `${mx} MX`;
+
+  const us = stringOr(apiProduct.size_us, '').trim();
+  return us ? `US ${us}` : '';
 }
 
 function mapStatus(status: unknown): ProductStatus {

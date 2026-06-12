@@ -40,7 +40,7 @@ if (!Array.isArray(products)) {
 
 const publicAvailable = products.filter((product) => (
   product.published === true &&
-  product.availability === 'available' &&
+  hasAvailableVariant(product) &&
   product.slug
 ));
 
@@ -48,9 +48,11 @@ if (publicAvailable.length === 0) {
   throw new Error('Catalog API returned no published available products');
 }
 
-const hidden = products.filter((product) => product.published !== true || product.availability !== 'available');
+const hidden = products.filter((product) => product.published !== true || !hasAvailableVariant(product));
 const featured = publicAvailable.filter((product) => product.featured === true);
 const sortOrderValues = publicAvailable.map((product) => product.sort_order);
+const variantProducts = publicAvailable.filter((product) => Array.isArray(product.variants) && product.variants.length > 0);
+const multiVariantProducts = variantProducts.filter((product) => product.variants.length > 1);
 const newestSlug = [...publicAvailable].sort((a, b) => {
   const bySort = Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0);
   if (bySort !== 0) return bySort;
@@ -62,8 +64,28 @@ console.log(`Catalog API products: ${products.length}`);
 console.log(`Published + available products: ${publicAvailable.length}`);
 console.log(`Hidden by public filters: ${hidden.length}`);
 console.log(`Featured products: ${featured.length}`);
+console.log(`Variant-backed products: ${variantProducts.length}`);
+console.log(`Multi-variant products: ${multiVariantProducts.length}`);
 console.log(`Sort order values: ${sortOrderValues.join(', ')}`);
 console.log(`First public product by sort/newest: ${newestSlug}`);
+
+for (const product of variantProducts) {
+  const availableVariantSizes = product.variants
+    .filter((variant) => variant.status === 'available')
+    .map((variant) => variant.size_label)
+    .filter(Boolean);
+
+  if (availableVariantSizes.length === 0) {
+    throw new Error(`${product.slug} has variants but no available variant sizes`);
+  }
+
+  if (Array.isArray(product.available_sizes)) {
+    const mismatched = product.available_sizes.filter((size) => !availableVariantSizes.includes(size));
+    if (mismatched.length > 0) {
+      throw new Error(`${product.slug} available_sizes includes non-available variant sizes: ${mismatched.join(', ')}`);
+    }
+  }
+}
 
 if (SITE_URL) {
   const siteBase = SITE_URL.replace(/\/$/, '');
@@ -74,4 +96,12 @@ if (SITE_URL) {
   }
 
   console.log(`Verified ${siteBase} homepage includes live public count`);
+}
+
+function hasAvailableVariant(product) {
+  if (Array.isArray(product.variants) && product.variants.length > 0) {
+    return product.variants.some((variant) => variant.status === 'available');
+  }
+
+  return product.availability === 'available';
 }

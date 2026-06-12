@@ -24,6 +24,13 @@ export interface ProductSize {
   cm:  number;
 }
 
+export interface ProductVariant {
+  id:        string;
+  sizeLabel: string;
+  status:    ProductStatus;
+  salePrice?: number;
+}
+
 export interface Product {
   id:        string;
   slug:      string;
@@ -34,6 +41,7 @@ export interface Product {
   size:      ProductSize;
   price:     number;
   status:    ProductStatus;
+  variants:  ProductVariant[];
   condition: ConditionGrade;
   flawLevel: FlawLevel;
   flaws:     Flaw[];

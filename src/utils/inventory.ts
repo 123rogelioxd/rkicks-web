@@ -1,4 +1,4 @@
-import type { Product, ProductStatus, ConditionGrade, FlawLevel } from '@/types/product';
+import type { Product, ProductStatus, ConditionGrade, FlawLevel, ProductVariant } from '@/types/product';
 
 export const conditionLabel: Record<ConditionGrade, string> = {
   'new':       'New',
@@ -40,6 +40,18 @@ export function isSold(product: Product): boolean {
 
 export function getAvailableProducts(products: Product[]): Product[] {
   return products.filter((p) => p.status !== 'sold');
+}
+
+export function getAvailableVariants(product: Product): ProductVariant[] {
+  return product.variants.filter((variant) => variant.status === 'available');
+}
+
+export function getAvailableSizeLabels(product: Product): string[] {
+  return getAvailableVariants(product).map((variant) => variant.sizeLabel);
+}
+
+export function getVariantPrice(product: Product, variant?: ProductVariant | null): number {
+  return variant?.salePrice && variant.salePrice > 0 ? variant.salePrice : product.price;
 }
 
 export function sortProducts(

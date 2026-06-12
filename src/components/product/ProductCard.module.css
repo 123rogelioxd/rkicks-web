@@ -72,11 +72,16 @@
   flex-wrap: wrap;
 }
 
-.sizeLabel {
+.sizeLabel,
+.availableSizes {
   font-family: var(--rk-font-mono);
   font-size: 9px;
   letter-spacing: var(--rk-ls-mono);
   color: var(--rk-t2);
+}
+
+.availableSizes {
+  line-height: 1.4;
 }
 
 .priceRow {
