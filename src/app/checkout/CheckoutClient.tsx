@@ -7,6 +7,7 @@ import ProductImage from '@/components/product/ProductImage';
 import type { Product } from '@/types/product';
 import {
   type CheckoutCartItem,
+  getCartItemIdentity,
   readCart,
   removeCartItem,
   updateCartItemQuantity,
@@ -23,6 +24,7 @@ export default function CheckoutClient() {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [checking, setChecking] = useState(true);
+  const [nameError, setNameError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -68,14 +70,16 @@ export default function CheckoutClient() {
     }),
     [items, customerName, customerPhone]
   );
+  const hasCustomerName = customerName.trim().length > 0;
   const canCheckout = items.length > 0 && !hasUnavailable && !checking;
+  const canFinalize = canCheckout && hasCustomerName;
 
   const handleRemove = (item: CheckoutCartItem) => {
-    setItems(removeCartItem(item.productSlug, item.variantId));
+    setItems(removeCartItem(getCartItemIdentity(item)));
   };
 
   const handleQuantity = (item: CheckoutCartItem, quantity: number) => {
-    setItems(updateCartItemQuantity(item.productSlug, item.variantId, quantity));
+    setItems(updateCartItemQuantity(getCartItemIdentity(item), quantity));
   };
 
   return (
@@ -104,7 +108,7 @@ export default function CheckoutClient() {
 
                 return (
                   <article
-                    key={`${item.productSlug}-${item.variantId}`}
+                    key={getCartItemIdentity(item)}
                     className={`${styles.item} ${item.unavailable ? styles.itemUnavailable : ''}`}
                   >
                     <div className={styles.imageWrap}>
@@ -168,9 +172,14 @@ export default function CheckoutClient() {
                 Nombre
                 <input
                   value={customerName}
-                  onChange={(event) => setCustomerName(event.target.value)}
+                  onChange={(event) => {
+                    setCustomerName(event.target.value);
+                    if (event.target.value.trim()) setNameError(false);
+                  }}
                   placeholder="Tu nombre"
+                  aria-invalid={nameError}
                 />
+                {nameError && <span className={styles.fieldError}>Escribe tu nombre para finalizar.</span>}
               </label>
 
               <label className={styles.field}>
@@ -185,11 +194,14 @@ export default function CheckoutClient() {
               <pre className={styles.preview}>{message}</pre>
 
               <a
-                className={`${styles.finalize} ${!canCheckout ? styles.finalizeDisabled : ''}`}
-                href={canCheckout ? getWhatsAppURL(message) : undefined}
-                aria-disabled={!canCheckout}
+                className={`${styles.finalize} ${!canFinalize ? styles.finalizeDisabled : ''}`}
+                href={canFinalize ? getWhatsAppURL(message) : undefined}
+                aria-disabled={!canFinalize}
                 onClick={(event) => {
-                  if (!canCheckout) event.preventDefault();
+                  if (!canFinalize) {
+                    event.preventDefault();
+                    if (canCheckout && !hasCustomerName) setNameError(true);
+                  }
                 }}
               >
                 Finalizar por WhatsApp
@@ -209,12 +221,16 @@ export default function CheckoutClient() {
 function reconcileCart(items: CheckoutCartItem[], liveProducts: Product[]): CheckoutCartItem[] {
   return items.map((item) => {
     const liveProduct = liveProducts.find((product) => product.slug === item.productSlug);
-    const liveVariant = liveProduct?.variants.find((variant) => variant.id === item.variantId);
+    const liveVariant = liveProduct?.variants.find((variant) => {
+      if (item.variantId) return variant.id === item.variantId;
+      return getVariantPrimarySizeLabel(liveProduct, variant) === item.selectedSizeLabel;
+    });
     const unavailable = !liveProduct || !liveVariant || liveVariant.status !== 'available';
     const maxQuantity = liveVariant?.stockQuantity && liveVariant.stockQuantity > 1 ? liveVariant.stockQuantity : 1;
 
     return {
       ...item,
+      cartKey: getCartItemIdentity(item),
       productId: liveProduct?.id ?? item.productId,
       productName: liveProduct?.model ?? item.productName,
       brand: liveProduct?.brand ?? item.brand,

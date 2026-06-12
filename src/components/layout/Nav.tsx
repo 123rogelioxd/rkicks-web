@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getCartItemCount, readCart } from '@/utils/checkout-cart';
 import styles from './Nav.module.css';
 
 const links = [
@@ -11,6 +12,19 @@ const links = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const syncCartCount = () => setCartCount(getCartItemCount(readCart()));
+    syncCartCount();
+    window.addEventListener('rkicks-cart-updated', syncCartCount);
+    window.addEventListener('storage', syncCartCount);
+
+    return () => {
+      window.removeEventListener('rkicks-cart-updated', syncCartCount);
+      window.removeEventListener('storage', syncCartCount);
+    };
+  }, []);
 
   return (
     <>
@@ -29,6 +43,14 @@ export default function Nav() {
               </Link>
             ))}
           </nav>
+
+          <Link href="/checkout" className={styles.cartLink} aria-label={`Checkout, ${cartCount} pares`}>
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M5.2 6.7h11.6l-1.1 6.1a1.8 1.8 0 0 1-1.8 1.5H7.3a1.8 1.8 0 0 1-1.8-1.6L4.7 4.5H2.8" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M8 16.8h.1M14 16.8h.1" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+            </svg>
+            <span className={styles.cartCount}>{cartCount}</span>
+          </Link>
 
           <button
             className={styles.hamburger}
@@ -57,6 +79,13 @@ export default function Nav() {
         </button>
 
         <nav aria-label="Mobile principal">
+          <Link
+            href="/checkout"
+            className={`${styles.overlayLink} ${styles.overlayCartLink}`}
+            onClick={() => setOpen(false)}
+          >
+            Checkout ({cartCount})
+          </Link>
           {links.map((l) => (
             <Link
               key={l.href}

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   openWhatsApp,
@@ -8,7 +8,7 @@ import {
   buildReservedMessage,
   buildPreorderMessage,
 } from '@/utils/whatsapp';
-import { addSelectedVariantToCart } from '@/utils/checkout-cart';
+import { addSelectedVariantToCart, isSelectedVariantInCart } from '@/utils/checkout-cart';
 import { conditionLabel, getAvailableVariants, getVariantPrimarySizeLabel } from '@/utils/inventory';
 import type { Product, ProductVariant } from '@/types/product';
 import styles from './WhatsAppCTA.module.css';
@@ -49,8 +49,31 @@ interface ProductCTAProps {
 
 export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps) {
   const [message, setMessage] = useState<string | null>(null);
-  const [added, setAdded] = useState(false);
+  const [selectedInCart, setSelectedInCart] = useState(false);
   const availableVariants = getAvailableVariants(product);
+  const actionableVariant = selectedVariant ?? (availableVariants.length === 1 ? availableVariants[0] : null);
+  const checkoutLabel = selectedInCart ? 'Ya está en carrito' : 'Agregar al carrito';
+
+  useEffect(() => {
+    const syncSelectedInCart = () => {
+      setSelectedInCart(isSelectedVariantInCart(product, actionableVariant));
+    };
+
+    syncSelectedInCart();
+    setMessage(null);
+    window.addEventListener('rkicks-cart-updated', syncSelectedInCart);
+    window.addEventListener('storage', syncSelectedInCart);
+
+    return () => {
+      window.removeEventListener('rkicks-cart-updated', syncSelectedInCart);
+      window.removeEventListener('storage', syncSelectedInCart);
+    };
+  }, [product, actionableVariant]);
+
+  const metaSize = useMemo(() => {
+    if (selectedVariant) return getVariantPrimarySizeLabel(product, selectedVariant);
+    return availableVariants.map((variant) => variant.sizeLabel).join(' / ');
+  }, [availableVariants, product, selectedVariant]);
   const ctaLabel = {
     available: 'Preguntar por WhatsApp',
     reserved: 'Unirse a la lista de espera',
@@ -65,9 +88,8 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
         return;
       }
 
-      const variant = selectedVariant ?? availableVariants[0] ?? null;
       setMessage(null);
-      openWhatsApp(buildProductMessage(product, variant));
+      openWhatsApp(buildProductMessage(product, actionableVariant));
     }
 
     if (product.status === 'reserved') openWhatsApp(buildReservedMessage(product, selectedVariant));
@@ -76,32 +98,29 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
 
   const handleAddToCheckout = () => {
     if (!selectedVariant && availableVariants.length > 1) {
-      setAdded(false);
       setMessage('Selecciona una talla antes de agregar al checkout.');
       return;
     }
 
-    const variant = selectedVariant ?? availableVariants[0] ?? null;
-    const result = addSelectedVariantToCart(product, variant, window.location.origin);
-    setAdded(result.ok);
+    const result = addSelectedVariantToCart(product, actionableVariant, window.location.origin);
 
     if (result.ok) {
-      setMessage(result.incremented ? 'Cantidad actualizada en checkout.' : 'Par agregado al checkout.');
+      setSelectedInCart(true);
+      setMessage(result.incremented ? 'Cantidad actualizada en carrito.' : 'Par agregado al carrito.');
       return;
     }
 
     const copy = {
       'missing-variant': 'Selecciona una talla antes de agregar al checkout.',
       unavailable: 'Esta talla ya no esta disponible.',
-      duplicate: 'Esta talla ya esta en tu checkout.',
+      duplicate: 'Esta talla ya está en tu carrito.',
     }[result.reason];
+    if (result.reason === 'duplicate') setSelectedInCart(true);
     setMessage(copy);
   };
 
   if (!ctaLabel) return null;
 
-  const variantSizes = availableVariants.map((variant) => variant.sizeLabel).join(' / ');
-  const metaSize = selectedVariant ? getVariantPrimarySizeLabel(product, selectedVariant) : variantSizes;
   const meta = `${product.id} - ${metaSize} - ${conditionLabel[product.condition]}`;
 
   return (
@@ -122,10 +141,10 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
           className={styles.checkoutBtn}
           onClick={handleAddToCheckout}
         >
-          Agregar al checkout
+          {checkoutLabel}
         </button>
       )}
-      {added && (
+      {selectedInCart && (
         <Link href="/checkout" className={styles.checkoutLink}>
           Ir al checkout
         </Link>

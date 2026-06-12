@@ -211,6 +211,19 @@
   font-size: 14px;
 }
 
+.field input[aria-invalid="true"] {
+  border-color: #C05020;
+}
+
+.fieldError {
+  color: #F0B18A;
+  font-family: var(--rk-font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .preview {
   white-space: pre-wrap;
   margin: 0;

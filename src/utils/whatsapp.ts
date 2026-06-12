@@ -103,7 +103,7 @@ export function openWhatsApp(message: string): void {
 
 function formatWhatsAppItem(item: WhatsAppLineItem): string {
   const quantity = item.quantity && item.quantity > 1 ? ` x${item.quantity}` : '';
-  return `• ${item.name} - ${item.sizeLabel} - ${formatPrice(item.price)}${quantity}`;
+  return `• ${item.name} — ${item.sizeLabel} — ${formatPrice(item.price)}${quantity}`;
 }
 
 function cleanField(value?: string): string {

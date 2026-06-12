@@ -244,9 +244,10 @@ function mapVariantRecord(variant: unknown, index: number): ProductVariant | nul
 
   const sizeLabel = stringOr(variant.size_label ?? variant.sizeLabel ?? variant.size, '').trim();
   if (!sizeLabel) return null;
+  const id = stringOr(variant.id, '').trim() || `variant-${index + 1}`;
 
   return {
-    id: stringOr(variant.id, `variant-${index + 1}`),
+    id,
     sizeLabel,
     status: mapStatus(variant.status ?? variant.availability),
     salePrice: numberOr(variant.sale_price ?? variant.salePrice ?? variant.price, 0),
