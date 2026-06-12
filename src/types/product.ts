@@ -25,10 +25,15 @@ export interface ProductSize {
 }
 
 export interface ProductVariant {
-  id:        string;
-  sizeLabel: string;
-  status:    ProductStatus;
-  salePrice?: number;
+  id:             string;
+  sizeLabel:      string;
+  status:         ProductStatus;
+  salePrice?:     number;
+  sizeMx?:        number | string;
+  sizeUs?:        number | string;
+  sizeEu?:        number | string;
+  sizeCm?:        number | string;
+  stockQuantity?: number;
 }
 
 export interface Product {

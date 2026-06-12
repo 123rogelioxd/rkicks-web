@@ -28,6 +28,9 @@ export type ApiProduct = Record<string, unknown> & {
   size_cm?: string | number | null;
   size?: string | number | null;
   price?: string | number | null;
+  stock_quantity?: string | number | null;
+  inventory_quantity?: string | number | null;
+  quantity?: string | number | null;
   condition?: string | null;
   flaw_level?: string | null;
   flaws?: unknown;
@@ -247,6 +250,11 @@ function mapVariantRecord(variant: unknown, index: number): ProductVariant | nul
     sizeLabel,
     status: mapStatus(variant.status ?? variant.availability),
     salePrice: numberOr(variant.sale_price ?? variant.salePrice ?? variant.price, 0),
+    sizeMx: optionalSizeValue(variant.size_mx ?? variant.sizeMx ?? variant.mx),
+    sizeUs: optionalSizeValue(variant.size_us ?? variant.sizeUs ?? variant.us),
+    sizeEu: optionalSizeValue(variant.size_eu ?? variant.sizeEu ?? variant.eu ?? variant.eur),
+    sizeCm: optionalSizeValue(variant.size_cm ?? variant.sizeCm ?? variant.cm),
+    stockQuantity: optionalPositiveNumber(variant.stock_quantity ?? variant.stockQuantity ?? variant.inventory_quantity ?? variant.inventoryQuantity ?? variant.quantity),
   };
 }
 
@@ -425,6 +433,18 @@ function numberOr(value: unknown, fallback: number): number {
   if (value === null || value === undefined || value === '') return fallback;
   const numeric = typeof value === 'number' ? value : Number(value);
   return Number.isFinite(numeric) ? numeric : fallback;
+}
+
+function optionalPositiveNumber(value: unknown): number | undefined {
+  const numeric = numberOr(value, 0);
+  return numeric > 0 ? numeric : undefined;
+}
+
+function optionalSizeValue(value: unknown): number | string | undefined {
+  if (value === null || value === undefined || value === '') return undefined;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') return value.trim() || undefined;
+  return undefined;
 }
 
 function getStringArray(value: unknown): string[] {

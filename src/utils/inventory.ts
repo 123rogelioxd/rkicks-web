@@ -54,6 +54,62 @@ export function getVariantPrice(product: Product, variant?: ProductVariant | nul
   return variant?.salePrice && variant.salePrice > 0 ? variant.salePrice : product.price;
 }
 
+export function getVariantStatus(product: Product, variant?: ProductVariant | null): ProductStatus {
+  return variant?.status ?? product.status;
+}
+
+export function formatLegacyProductSize(product: Product): string {
+  const parts = [
+    product.size.us > 0 ? `US ${formatSizeNumber(product.size.us)}` : '',
+    product.size.eur > 0 ? `EUR ${formatSizeNumber(product.size.eur)}` : '',
+    product.size.cm > 0 ? `${formatSizeNumber(product.size.cm)} cm` : '',
+  ].filter(Boolean);
+
+  return parts.join(' · ') || 'Talla por confirmar';
+}
+
+export function getVariantPrimarySizeLabel(product: Product, variant?: ProductVariant | null): string {
+  if (!variant) return formatLegacyProductSize(product);
+  return normalizeSizeLabel(variant.sizeLabel) || buildVariantSizeLabel(variant) || formatLegacyProductSize(product);
+}
+
+export function getVariantDetailSizeLabel(product: Product, variant?: ProductVariant | null): string {
+  if (!variant) return formatLegacyProductSize(product);
+
+  const details = [
+    variant.sizeUs ? `US ${formatSizeValue(variant.sizeUs)}` : '',
+    variant.sizeEu ? `EUR ${formatSizeValue(variant.sizeEu)}` : '',
+    variant.sizeCm ? `${formatSizeValue(variant.sizeCm)} cm` : '',
+  ].filter(Boolean);
+
+  if (details.length > 0) return details.join(' · ');
+  return getVariantPrimarySizeLabel(product, variant);
+}
+
+export function variantSupportsQuantity(variant?: ProductVariant | null): boolean {
+  return typeof variant?.stockQuantity === 'number' && variant.stockQuantity > 1;
+}
+
+function buildVariantSizeLabel(variant: ProductVariant): string {
+  if (variant.sizeMx) return `${formatSizeValue(variant.sizeMx)} MX`;
+  if (variant.sizeUs) return `US ${formatSizeValue(variant.sizeUs)}`;
+  if (variant.sizeEu) return `EUR ${formatSizeValue(variant.sizeEu)}`;
+  if (variant.sizeCm) return `${formatSizeValue(variant.sizeCm)} cm`;
+  return '';
+}
+
+function normalizeSizeLabel(label: string): string {
+  return label.trim().replace(/\s+/g, ' ');
+}
+
+function formatSizeValue(value: number | string): string {
+  return typeof value === 'number' ? formatSizeNumber(value) : value.trim();
+}
+
+function formatSizeNumber(value: number): string {
+  return Number.isInteger(value) ? String(value) : String(value).replace(/\.0$/, '');
+}
+
 export function sortProducts(
   products: Product[],
   sort: 'recent' | 'price-asc' | 'price-desc' | 'condition'

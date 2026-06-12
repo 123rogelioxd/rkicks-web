@@ -1,21 +1,22 @@
-import type { Product } from '@/types/product';
-import { conditionLabel, flawLevelLabelES } from '@/utils/inventory';
+import type { Product, ProductVariant } from '@/types/product';
+import { conditionLabel, flawLevelLabelES, getVariantDetailSizeLabel } from '@/utils/inventory';
 import styles from './ConditionTable.module.css';
 
 interface Props {
   product: Product;
+  selectedVariant?: ProductVariant | null;
 }
 
 const boxLabel: Record<string, string> = {
-  original:    'Caja original',
+  original: 'Caja original',
   replacement: 'Caja de reemplazo',
-  none:        'Sin caja',
+  none: 'Sin caja',
 };
 
-export default function ConditionTable({ product }: Props) {
+export default function ConditionTable({ product, selectedVariant }: Props) {
   const rows: Array<{ label: string; value: string; highlight?: boolean }> = [
     {
-      label: 'Condición general',
+      label: 'Condicion general',
       value: conditionLabel[product.condition],
       highlight: true,
     },
@@ -29,7 +30,7 @@ export default function ConditionTable({ product }: Props) {
     },
     {
       label: 'Talla',
-      value: `US ${product.size.us} · EUR ${product.size.eur} · ${product.size.cm} cm`,
+      value: getVariantDetailSizeLabel(product, selectedVariant),
     },
     {
       label: 'Autenticidad',
@@ -38,7 +39,7 @@ export default function ConditionTable({ product }: Props) {
   ];
 
   return (
-    <div className={styles.table} role="table" aria-label="Especificaciones de condición">
+    <div className={styles.table} role="table" aria-label="Especificaciones de condicion">
       {rows.map((row, i) => (
         <div
           key={i}

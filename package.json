@@ -9,6 +9,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "verify:live-catalog": "node scripts/verify-live-catalog.mjs",
+    "verify:checkout-flow": "node scripts/verify-checkout-flow.mjs",
     "verify:static-export": "node scripts/verify-static-export.mjs",
     "verify:deploy": "npm run build && npm run verify:static-export && npm run verify:live-catalog"
   },

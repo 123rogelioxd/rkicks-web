@@ -118,6 +118,40 @@
 .stickyBtn:hover  { opacity: 0.88; }
 .stickyBtn:active { opacity: 0.75; }
 
+.checkoutBtn {
+  width: 100%;
+  min-height: 48px;
+  padding: 13px 18px;
+  background: transparent;
+  color: var(--rk-t-bone);
+  border: 1px solid var(--rk-border-ink);
+  border-radius: var(--rk-radius-md);
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background var(--rk-dur-fast) var(--rk-ease-out),
+    border-color var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.checkoutBtn:hover {
+  background: rgba(240,234,224,0.08);
+  border-color: rgba(240,234,224,0.28);
+}
+
+.checkoutLink {
+  align-self: center;
+  color: var(--rk-t-bone);
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid var(--rk-border-ink);
+  padding-bottom: 2px;
+}
+
 .stickyMeta {
   font-family: var(--rk-font-mono);
   font-size: 9px;

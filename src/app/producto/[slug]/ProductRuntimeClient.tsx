@@ -146,7 +146,7 @@ export default function ProductRuntimeClient({
             </div>
 
             <div className={styles.rcgBody}>
-              <ConditionTable product={product} />
+              <ConditionTable product={product} selectedVariant={selectedVariant} />
               <FlawMap flaws={product.flaws} flawLevel={product.flawLevel} />
               <AuthenticityBlock product={product} />
             </div>

@@ -69,6 +69,32 @@
   padding-bottom: 4px;
 }
 
+.selectedSize {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--rk-sp-2);
+  width: fit-content;
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--rk-ink);
+  color: var(--rk-t-bone);
+  border-radius: var(--rk-radius-sm);
+  font-family: var(--rk-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.selectedSize span {
+  font-family: var(--rk-font-mono);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rk-t-bone-dim);
+}
+
 /* Size chips */
 .sizeRow {
   display: flex;

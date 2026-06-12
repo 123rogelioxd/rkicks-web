@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   openWhatsApp,
   buildGenericMessage,
@@ -7,7 +8,8 @@ import {
   buildReservedMessage,
   buildPreorderMessage,
 } from '@/utils/whatsapp';
-import { conditionLabel, getAvailableVariants } from '@/utils/inventory';
+import { addSelectedVariantToCart } from '@/utils/checkout-cart';
+import { conditionLabel, getAvailableVariants, getVariantPrimarySizeLabel } from '@/utils/inventory';
 import type { Product, ProductVariant } from '@/types/product';
 import styles from './WhatsAppCTA.module.css';
 
@@ -47,6 +49,7 @@ interface ProductCTAProps {
 
 export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps) {
   const [message, setMessage] = useState<string | null>(null);
+  const [added, setAdded] = useState(false);
   const availableVariants = getAvailableVariants(product);
   const ctaLabel = {
     available: 'Preguntar por WhatsApp',
@@ -62,18 +65,43 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
         return;
       }
 
+      const variant = selectedVariant ?? availableVariants[0] ?? null;
       setMessage(null);
-      openWhatsApp(buildProductMessage(product, selectedVariant, window.location.href));
+      openWhatsApp(buildProductMessage(product, variant));
     }
 
-    if (product.status === 'reserved') openWhatsApp(buildReservedMessage(product));
-    if (product.status === 'pre-order') openWhatsApp(buildPreorderMessage(product));
+    if (product.status === 'reserved') openWhatsApp(buildReservedMessage(product, selectedVariant));
+    if (product.status === 'pre-order') openWhatsApp(buildPreorderMessage(product, selectedVariant));
+  };
+
+  const handleAddToCheckout = () => {
+    if (!selectedVariant && availableVariants.length > 1) {
+      setAdded(false);
+      setMessage('Selecciona una talla antes de agregar al checkout.');
+      return;
+    }
+
+    const variant = selectedVariant ?? availableVariants[0] ?? null;
+    const result = addSelectedVariantToCart(product, variant, window.location.origin);
+    setAdded(result.ok);
+
+    if (result.ok) {
+      setMessage(result.incremented ? 'Cantidad actualizada en checkout.' : 'Par agregado al checkout.');
+      return;
+    }
+
+    const copy = {
+      'missing-variant': 'Selecciona una talla antes de agregar al checkout.',
+      unavailable: 'Esta talla ya no esta disponible.',
+      duplicate: 'Esta talla ya esta en tu checkout.',
+    }[result.reason];
+    setMessage(copy);
   };
 
   if (!ctaLabel) return null;
 
   const variantSizes = availableVariants.map((variant) => variant.sizeLabel).join(' / ');
-  const metaSize = selectedVariant?.sizeLabel ?? (variantSizes || `US ${product.size.us}`);
+  const metaSize = selectedVariant ? getVariantPrimarySizeLabel(product, selectedVariant) : variantSizes;
   const meta = `${product.id} - ${metaSize} - ${conditionLabel[product.condition]}`;
 
   return (
@@ -88,6 +116,20 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
           {ctaLabel}
         </span>
       </button>
+      {product.status === 'available' && (
+        <button
+          type="button"
+          className={styles.checkoutBtn}
+          onClick={handleAddToCheckout}
+        >
+          Agregar al checkout
+        </button>
+      )}
+      {added && (
+        <Link href="/checkout" className={styles.checkoutLink}>
+          Ir al checkout
+        </Link>
+      )}
       <p className={styles.stickyMeta}>{meta}</p>
       {message && <p className={styles.stickyMessage}>{message}</p>}
     </div>

@@ -1,6 +1,13 @@
 import type { Product, ProductVariant } from '@/types/product';
 import { formatPrice } from '@/utils/currency';
-import { conditionLabel, flawLevelLabelES, getVariantPrice, statusLabelES } from '@/utils/inventory';
+import {
+  conditionLabel,
+  flawLevelLabelES,
+  getVariantDetailSizeLabel,
+  getVariantPrice,
+  getVariantStatus,
+  statusLabelES,
+} from '@/utils/inventory';
 import StatusPill from '@/components/ui/StatusPill';
 import ConditionChip from '@/components/ui/ConditionChip';
 import FlawBar from '@/components/ui/FlawBar';
@@ -14,6 +21,8 @@ interface Props {
 
 export default function ProductMeta({ product, selectedVariant, onSelectVariant }: Props) {
   const displayedPrice = getVariantPrice(product, selectedVariant);
+  const displayedStatus = getVariantStatus(product, selectedVariant);
+  const displayedSize = selectedVariant ? getVariantDetailSizeLabel(product, selectedVariant) : null;
 
   return (
     <div className={styles.meta}>
@@ -32,11 +41,18 @@ export default function ProductMeta({ product, selectedVariant, onSelectVariant 
       <div className={styles.priceRow}>
         <span className={styles.price}>{formatPrice(displayedPrice)}</span>
         <span className={styles.currency}>MXN</span>
-        <StatusPill status={product.status} />
+        <StatusPill status={displayedStatus} />
       </div>
 
+      {displayedSize && (
+        <p className={styles.selectedSize}>
+          <span>Talla seleccionada</span>
+          {displayedSize}
+        </p>
+      )}
+
       <div className={styles.selectorBlock}>
-        <p className={styles.selectorTitle}>Select size</p>
+        <p className={styles.selectorTitle}>Selecciona talla</p>
         <div className={styles.variantGrid}>
           {product.variants.map((variant) => {
             const selectable = variant.status === 'available';
