@@ -6,12 +6,15 @@ import RCGStamp from '@/components/rcg/RCGStamp';
 import CompleteTheFit from '@/components/ecosystem/CompleteTheFit';
 import { WhatsAppSection } from '@/components/whatsapp/WhatsAppCTA';
 import Eyebrow from '@/components/ui/Eyebrow';
-import { fetchCatalogForStaticExport, getPairingFromProduct } from '@/utils/api-products';
+import { fetchPublicCatalog, getPairingFromProduct } from '@/utils/api-products';
 import { formatPrice } from '@/utils/currency';
 import styles from './page.module.css';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function HomePage() {
-  const liveProducts = await fetchCatalogForStaticExport();
+  const liveProducts = await fetchPublicCatalog();
   const availableProducts = liveProducts.filter((product) => product.status === 'available');
   const recentPairs = [...availableProducts]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())

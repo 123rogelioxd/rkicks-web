@@ -2,18 +2,13 @@ import type { Metadata } from 'next';
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import ProductRuntimeClient from './ProductRuntimeClient';
-import { fetchCatalogForStaticExport } from '@/utils/api-products';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const products = await fetchCatalogForStaticExport();
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
-}
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

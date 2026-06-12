@@ -52,13 +52,13 @@ export type ApiProduct = Record<string, unknown> & {
 };
 
 export async function fetchLiveCatalog(): Promise<Product[]> {
-  const data = await fetchRuntimeJson<ApiProduct[]>('/api/rkicks/catalog.php', '/catalog');
+  const data = await fetchRuntimeJson<ApiProduct[]>('/api/rkicks/catalog/', '/catalog');
   if (!Array.isArray(data)) throw new Error('RKicks API catalog response was not an array');
   return data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
 }
 
-export async function fetchCatalogForStaticExport(): Promise<Product[]> {
-  const data = await fetchStaticJson<ApiProduct[]>(cacheBust(`${RKICKS_API_BASE}/catalog`));
+export async function fetchPublicCatalog(): Promise<Product[]> {
+  const data = await fetchNoStoreJson<ApiProduct[]>(cacheBust(`${RKICKS_API_BASE}/catalog`));
   if (!Array.isArray(data)) throw new Error('RKicks API catalog response was not an array');
   return data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
 }
@@ -66,7 +66,7 @@ export async function fetchCatalogForStaticExport(): Promise<Product[]> {
 export async function fetchLiveProductBySlug(slug: string): Promise<Product | null> {
   const encodedSlug = encodeURIComponent(slug);
   const data = await fetchRuntimeJson<ApiProduct>(
-    `/api/rkicks/product.php?slug=${encodedSlug}`,
+    `/api/rkicks/products/${encodedSlug}/`,
     `/products/${encodedSlug}`
   );
   return mapApiProduct(data);
@@ -143,7 +143,7 @@ function cacheBust(url: string): string {
 
 async function fetchJsonUrl<T>(url: string, source: 'same-origin' | 'direct-api'): Promise<T> {
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), 15000);
 
   try {
     logRuntimeApi('attempt', { source, url });
@@ -163,15 +163,16 @@ async function fetchJsonUrl<T>(url: string, source: 'same-origin' | 'direct-api'
 
     return response.json() as Promise<T>;
   } finally {
-    window.clearTimeout(timeout);
+    clearTimeout(timeout);
   }
 }
 
-async function fetchStaticJson<T>(url: string): Promise<T> {
+async function fetchNoStoreJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
-    cache: 'force-cache',
+    cache: 'no-store',
     headers: {
       Accept: 'application/json',
+      'Cache-Control': 'no-cache',
     },
   });
 

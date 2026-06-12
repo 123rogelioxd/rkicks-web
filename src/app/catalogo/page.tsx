@@ -8,6 +8,9 @@ export const metadata = {
   description: 'Todos los pares disponibles en RKicks. Verificados, documentados, con precio honesto.',
 };
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function CatalogPage() {
   return (
     <>
