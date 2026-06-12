@@ -6,15 +6,26 @@ import RCGStamp from '@/components/rcg/RCGStamp';
 import CompleteTheFit from '@/components/ecosystem/CompleteTheFit';
 import { WhatsAppSection } from '@/components/whatsapp/WhatsAppCTA';
 import Eyebrow from '@/components/ui/Eyebrow';
-import { getRecentAvailable, getFeaturedPairing, getAvailableProducts, getMinAvailablePrice } from '@/utils/data';
+import { fetchCatalogForStaticExport, getPairingFromProduct } from '@/utils/api-products';
 import { formatPrice } from '@/utils/currency';
 import styles from './page.module.css';
 
 export default async function HomePage() {
-  const recentPairs     = await getRecentAvailable(3);
-  const featuredPair    = await getFeaturedPairing();
-  const availableCount  = (await getAvailableProducts()).length;
-  const minPrice        = await getMinAvailablePrice();
+  const liveProducts = await fetchCatalogForStaticExport();
+  const availableProducts = liveProducts.filter((product) => product.status === 'available');
+  const recentPairs = [...availableProducts]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 3);
+  const featuredPair = availableProducts
+    .map((product) => {
+      const pairing = getPairingFromProduct(product);
+      return pairing ? { ...pairing, product } : null;
+    })
+    .find((pairing) => pairing !== null) ?? null;
+  const availableCount = availableProducts.length;
+  const minPrice = availableProducts.length > 0
+    ? Math.min(...availableProducts.map((product) => product.price))
+    : null;
 
   return (
     <>

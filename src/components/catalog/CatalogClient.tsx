@@ -3,7 +3,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import type { Product } from '@/types/product';
 import { sortProducts } from '@/utils/inventory';
 import { openWhatsApp, buildSizeNotifyMessage } from '@/utils/whatsapp';
-import { canUseLocalRuntimeFallback, fetchLiveCatalog, logRuntimeApi } from '@/utils/api-products';
+import { fetchLiveCatalog, logRuntimeApi } from '@/utils/api-products';
 import SearchInput from './SearchInput';
 import SortSelect, { type SortOption } from './SortSelect';
 import FilterRail, { type ActiveFilters } from './FilterRail';
@@ -17,13 +17,10 @@ import styles from './CatalogClient.module.css';
 const PAGE_SIZE = 12;
 
 interface Props {
-  products:      Product[];
-  brands:        string[];
-  sizes:         number[];
   initialQuery?: string;
 }
 
-export default function CatalogClient({ products, brands, sizes, initialQuery = '' }: Props) {
+export default function CatalogClient({ initialQuery = '' }: Props) {
   const [runtimeProducts, setRuntimeProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -47,14 +44,10 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
           setRuntimeProducts(liveProducts);
         }
       } catch (error) {
-        logRuntimeApi('catalog fallback reason', error);
+        logRuntimeApi('catalog load failed', error);
         if (!cancelled) {
-          if (canUseLocalRuntimeFallback()) {
-            setRuntimeProducts(products);
-          } else {
-            setRuntimeProducts([]);
-            setApiError('No pudimos cargar el catalogo en vivo.');
-          }
+          setRuntimeProducts([]);
+          setApiError('No pudimos cargar el catalogo en vivo.');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -66,20 +59,16 @@ export default function CatalogClient({ products, brands, sizes, initialQuery = 
     return () => {
       cancelled = true;
     };
-  }, [products]);
+  }, []);
 
   const activeProducts = runtimeProducts.length > 0 || !loading ? runtimeProducts : [];
   const activeBrands = useMemo(
-    () => activeProducts.length > 0
-      ? [...new Set(activeProducts.map((product) => product.brand))].sort()
-      : brands,
-    [activeProducts, brands]
+    () => [...new Set(activeProducts.map((product) => product.brand))].sort(),
+    [activeProducts]
   );
   const activeSizes = useMemo(
-    () => activeProducts.length > 0
-      ? [...new Set(activeProducts.map((product) => product.size.us))].sort((a, b) => a - b)
-      : sizes,
-    [activeProducts, sizes]
+    () => [...new Set(activeProducts.map((product) => product.size.us))].sort((a, b) => a - b),
+    [activeProducts]
   );
 
   const activeCount =

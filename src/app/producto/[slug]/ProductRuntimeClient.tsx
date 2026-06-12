@@ -14,9 +14,8 @@ import { WhatsAppProductCTA } from '@/components/whatsapp/WhatsAppCTA';
 import Eyebrow from '@/components/ui/Eyebrow';
 import EmptyState from '@/components/ui/EmptyState';
 import Skeleton from '@/components/ui/Skeleton';
-import type { Pairing, Product } from '@/types/product';
+import type { Product } from '@/types/product';
 import {
-  canUseLocalRuntimeFallback,
   fetchLiveCatalog,
   fetchLiveProductBySlug,
   getPairingFromProduct,
@@ -26,20 +25,13 @@ import styles from './page.module.css';
 
 interface Props {
   slug: string;
-  fallbackProduct: Product;
-  fallbackPairing: Pairing | null;
-  fallbackProducts: Product[];
 }
 
 export default function ProductRuntimeClient({
   slug,
-  fallbackProduct,
-  fallbackPairing,
-  fallbackProducts,
 }: Props) {
-  const useLocalFallback = canUseLocalRuntimeFallback();
-  const [product, setProduct] = useState<Product | null>(() => useLocalFallback ? fallbackProduct : null);
-  const [allProducts, setAllProducts] = useState<Product[]>(() => useLocalFallback ? fallbackProducts : []);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [productError, setProductError] = useState<string | null>(null);
 
@@ -54,14 +46,10 @@ export default function ProductRuntimeClient({
         if (!liveProduct) throw new Error(`RKicks product ${slug} was not found in the live API`);
         if (!cancelled) setProduct(liveProduct);
       } catch (error) {
-        logRuntimeApi(`product fallback reason for ${slug}`, error);
+        logRuntimeApi(`product load failed for ${slug}`, error);
         if (!cancelled) {
-          if (canUseLocalRuntimeFallback()) {
-            setProduct(fallbackProduct);
-          } else {
-            setProduct(null);
-            setProductError('No pudimos cargar este producto en vivo.');
-          }
+          setProduct(null);
+          setProductError('No pudimos cargar este producto en vivo.');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -73,8 +61,8 @@ export default function ProductRuntimeClient({
         const liveProducts = await fetchLiveCatalog();
         if (!cancelled && liveProducts.length > 0) setAllProducts(liveProducts);
       } catch (error) {
-        logRuntimeApi('related-products fallback reason', error);
-        if (!cancelled && canUseLocalRuntimeFallback()) setAllProducts(fallbackProducts);
+        logRuntimeApi('related-products load failed', error);
+        if (!cancelled) setAllProducts([]);
       }
     }
 
@@ -87,8 +75,8 @@ export default function ProductRuntimeClient({
   }, [slug]);
 
   const pairing = useMemo(
-    () => product ? getPairingFromProduct(product) ?? fallbackPairing : fallbackPairing,
-    [fallbackPairing, product]
+    () => product ? getPairingFromProduct(product) : null,
+    [product]
   );
 
   if (!product && loading) {

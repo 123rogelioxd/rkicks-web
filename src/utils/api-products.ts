@@ -57,6 +57,12 @@ export async function fetchLiveCatalog(): Promise<Product[]> {
   return data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
 }
 
+export async function fetchCatalogForStaticExport(): Promise<Product[]> {
+  const data = await fetchStaticJson<ApiProduct[]>(cacheBust(`${RKICKS_API_BASE}/catalog`));
+  if (!Array.isArray(data)) throw new Error('RKicks API catalog response was not an array');
+  return data.map(mapApiProduct).filter((product): product is Product => Boolean(product));
+}
+
 export async function fetchLiveProductBySlug(slug: string): Promise<Product | null> {
   const encodedSlug = encodeURIComponent(slug);
   const data = await fetchRuntimeJson<ApiProduct>(
@@ -161,8 +167,19 @@ async function fetchJsonUrl<T>(url: string, source: 'same-origin' | 'direct-api'
   }
 }
 
-export function canUseLocalRuntimeFallback(): boolean {
-  return process.env.NODE_ENV !== 'production';
+async function fetchStaticJson<T>(url: string): Promise<T> {
+  const response = await fetch(url, {
+    cache: 'force-cache',
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`RKicks API request failed with ${response.status}`);
+  }
+
+  return response.json() as Promise<T>;
 }
 
 export function logRuntimeApi(message: string, details?: unknown): void {

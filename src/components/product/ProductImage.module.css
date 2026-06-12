@@ -25,11 +25,12 @@
 }
 
 .catalogCardImg {
-  width: 82%;
-  height: 82%;
-  max-height: calc(100% - 24px);
+  width: 75%;
+  height: 75%;
+  max-width: calc(100% - 32px);
+  max-height: calc(100% - 32px);
   margin: auto;
-  padding: 12px;
+  padding: 16px;
   box-sizing: border-box;
   object-fit: contain;
 }
