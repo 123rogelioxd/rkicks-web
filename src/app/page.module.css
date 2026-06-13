@@ -47,13 +47,48 @@
   );
 }
 
-/* Content is in-flow — no absolute positioning */
-.heroContent {
+/* Inner frame — text column (left) + sneaker visual (right) */
+.heroInner {
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
+  display: flex;
+}
+
+/*
+  Hero sneaker visual. Static asset lives in /public/images/hero/.
+  If the file is missing the element stays transparent and the dark
+  gradient (.heroBg) shows through — graceful fallback, no broken image.
+*/
+.heroImage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-position: center right;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Mobile scrim: full-bleed photo behind text, darkened so copy stays readable */
+.heroImage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 11, 8, 0.55) 0%,
+    rgba(13, 11, 8, 0.78) 58%,
+    rgba(13, 11, 8, 0.93) 100%
+  );
+}
+
+/* Content is in-flow above the visual */
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: 100%;
   padding: 64px var(--rk-sp-4) 56px;
   display: flex;
   flex-direction: column;
@@ -63,7 +98,28 @@
 @media (min-width: 768px) {
   .heroContent {
     padding: 80px var(--rk-sp-7) 72px;
-    max-width: 600px; /* constrains text column; right side holds real photo */
+    max-width: 560px; /* text column; sneaker visual holds the right */
+  }
+
+  .hero { min-height: 520px; }
+  .heroInner { align-items: center; }
+
+  /* Desktop: sneaker dominates the right, blended into ink on its left edge */
+  .heroImage {
+    left: auto;
+    right: 0;
+    width: 56%;
+    background-position: center;
+  }
+
+  /* Horizontal scrim only — fades photo into ink behind the text, no full darken */
+  .heroImage::after {
+    background: linear-gradient(
+      90deg,
+      var(--rk-ink) 0%,
+      rgba(13, 11, 8, 0.55) 22%,
+      rgba(13, 11, 8, 0) 55%
+    );
   }
 }
 
@@ -71,6 +127,61 @@
   .heroContent {
     padding: 96px var(--rk-sp-10) 88px;
   }
+
+  .hero { min-height: 600px; }
+  .heroImage { width: 58%; }
+}
+
+/* Trust strip — sits directly under the hero, same ink zone */
+.heroTrust {
+  position: relative;
+  z-index: 1;
+  background: var(--rk-ink);
+  border-top: 1px solid var(--rk-border-ink);
+}
+
+.heroTrustInner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--rk-sp-4);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rk-sp-4);
+}
+
+@media (min-width: 600px) {
+  .heroTrustInner { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .heroTrustInner {
+    grid-template-columns: repeat(4, 1fr);
+    padding: var(--rk-sp-5) var(--rk-sp-10);
+    gap: var(--rk-sp-6);
+  }
+}
+
+.heroTrustItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-1);
+}
+
+.heroTrustTitle {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: var(--rk-t-bone);
+}
+
+.heroTrustBody {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: 11px;
+  line-height: var(--rk-lh-relaxed);
+  color: var(--rk-t-bone-dim);
 }
 
 /* Eyebrow — unchanged token usage */
@@ -185,6 +296,37 @@
 }
 
 .heroSecondaryLink:hover { color: var(--rk-t-bone); }
+
+/* Secondary WhatsApp action — visible bordered button, never a faded ghost */
+.heroWhatsApp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rk-sp-2);
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--rk-t-bone);
+  border: 1px solid rgba(240, 234, 224, 0.28);
+  border-radius: var(--rk-radius-md);
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  min-height: 40px;
+  transition: border-color var(--rk-dur-fast) var(--rk-ease-out),
+              background var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.heroWhatsApp:hover {
+  border-color: var(--rk-t-bone);
+  background: rgba(240, 234, 224, 0.06);
+}
+
+.heroWhatsAppIcon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
 
 /* ── Available Now ── */
 .availableSection {

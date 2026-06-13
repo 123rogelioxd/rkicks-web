@@ -18,21 +18,50 @@ export default function HomePage() {
         <div className={styles.hero}>
           <div className={styles.heroBg} aria-hidden="true" />
 
-          <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>
-              Boutique de sneakers premium - Mexico
-            </p>
+          <div className={styles.heroInner}>
+            <div
+              className={styles.heroImage}
+              aria-hidden="true"
+              style={{ backgroundImage: "url('/images/hero/rkicks-hero-jordan.jpg')" }}
+            />
 
-            <h1 className={styles.heroHeadline}>
-              Curado por gente que sabe.
-            </h1>
+            <div className={styles.heroContent}>
+              <p className={styles.heroEyebrow}>
+                Sneakers premium · México
+              </p>
 
-            <p className={styles.heroDescriptor}>
-              Cada par seleccionado, verificado y documentado.
-              Condicion honesta. Sin sorpresas. Todo se cierra en WhatsApp.
-            </p>
+              <h1 className={styles.heroHeadline}>
+                Selección privada de sneakers.
+              </h1>
 
-            <HomeRuntimeClient />
+              <p className={styles.heroDescriptor}>
+                Pares originales, verificados y listos para comprar por WhatsApp.
+                Sin vueltas, sin sorpresas.
+              </p>
+
+              <HomeRuntimeClient />
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.heroTrust}>
+          <div className={styles.heroTrustInner}>
+            <div className={styles.heroTrustItem}>
+              <span className={styles.heroTrustTitle}>Foto del par exacto</span>
+              <span className={styles.heroTrustBody}>Ves lo que vas a recibir.</span>
+            </div>
+            <div className={styles.heroTrustItem}>
+              <span className={styles.heroTrustTitle}>Autenticidad revisada</span>
+              <span className={styles.heroTrustBody}>Sin réplicas.</span>
+            </div>
+            <div className={styles.heroTrustItem}>
+              <span className={styles.heroTrustTitle}>Garantía Real Condition</span>
+              <span className={styles.heroTrustBody}>Si no coincide, te devolvemos tu dinero.</span>
+            </div>
+            <div className={styles.heroTrustItem}>
+              <span className={styles.heroTrustTitle}>Compra asistida</span>
+              <span className={styles.heroTrustBody}>Te ayudamos por WhatsApp.</span>
+            </div>
           </div>
         </div>
       </div>
