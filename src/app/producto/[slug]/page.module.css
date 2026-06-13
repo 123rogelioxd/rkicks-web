@@ -110,6 +110,10 @@
 
 .soldLink:hover { border-color: var(--rk-t1); }
 
+.demandCapture {
+  margin-top: var(--rk-sp-4);
+}
+
 /* Spacer: prevents sticky mobile CTA from covering last section */
 .mobileSpacer {
   height: 90px;

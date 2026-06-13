@@ -125,6 +125,12 @@
   grid-column: 1 / -1;
 }
 
+/* ── Demand capture (empty state) ── */
+.demandCapture {
+  margin-top: var(--rk-sp-5);
+  max-width: 480px;
+}
+
 /* ── Load more ── */
 .loadMore {
   display: flex;

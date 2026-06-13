@@ -14,6 +14,7 @@ import { WhatsAppProductCTA } from '@/components/whatsapp/WhatsAppCTA';
 import PurchaseTrust from '@/components/conversion/PurchaseTrust';
 import ProductEvidenceBadges from '@/components/evidence/ProductEvidenceBadges';
 import NewVerified from '@/components/evidence/NewVerified';
+import DemandCaptureWhatsApp from '@/components/catalog/DemandCaptureWhatsApp';
 import Eyebrow from '@/components/ui/Eyebrow';
 import EmptyState from '@/components/ui/EmptyState';
 import Skeleton from '@/components/ui/Skeleton';
@@ -164,7 +165,16 @@ export default function ProductRuntimeClient({
               <Link href="/catalogo" className={styles.soldLink}>
                 Ver pares similares -&gt;
               </Link>
+              <div className={styles.demandCapture}>
+                <DemandCaptureWhatsApp product={product} />
+              </div>
             </section>
+          )}
+
+          {product.status === 'available' && (
+            <div className={styles.demandCapture}>
+              <DemandCaptureWhatsApp product={product} compact />
+            </div>
           )}
 
           <section className={styles.rcgSection}>

@@ -83,6 +83,17 @@ export function buildSizeNotifyMessage(sizeMx: number): string {
   return cleanMessage(`Hola, quisiera que me avisen cuando tengan pares en talla ${sizeMx} MX.`);
 }
 
+export function buildDemandCaptureMessage(product?: Product): string {
+  if (product) {
+    return cleanMessage(
+      `Hola\n\nEstoy buscando este par en otra talla:\n\n• ${product.model}\n• Talla deseada: ____\n\nMi nombre es ____.\n\nQuedo pendiente si lo consiguen.`,
+    );
+  }
+  return cleanMessage(
+    `Hola\n\nEstoy buscando un par que no encuentro en el catálogo.\n\nMi nombre es ____.\n\nQuedo pendiente si lo consiguen.`,
+  );
+}
+
 export function buildGenericMessage(): string {
   return cleanMessage('Hola, me interesa ver los pares disponibles en RKicks.');
 }

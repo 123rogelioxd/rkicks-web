@@ -1,0 +1,70 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-3);
+  padding: var(--rk-sp-5) var(--rk-sp-4);
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-md);
+  background: var(--rk-surface);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h4);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+}
+
+.body {
+  margin: 0;
+  font-family: var(--rk-font-sans);
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+  max-width: 380px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rk-sp-2);
+  align-self: flex-start;
+  padding: 10px 16px;
+  background: var(--rk-ink);
+  color: var(--rk-t-bone);
+  border: none;
+  border-radius: var(--rk-radius-md);
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-small);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: opacity var(--rk-dur-fast) var(--rk-ease-out);
+  min-height: 40px;
+}
+
+.btn:hover  { opacity: 0.85; }
+.btn:active { opacity: 0.7;  }
+
+/* Compact variant — inline link style */
+.compactBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rk-sp-2);
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rk-border-1);
+  padding-bottom: 1px;
+  font-family: var(--rk-font-mono);
+  font-size: var(--rk-fs-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rk-t2);
+  cursor: pointer;
+  transition: color var(--rk-dur-fast) var(--rk-ease-out);
+}
+
+.compactBtn:hover { color: var(--rk-t1); }

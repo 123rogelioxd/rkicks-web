@@ -31,6 +31,19 @@ export const evidencePhotoLabels: Record<EvidencePhotoType, string> = {
   receipt: 'Receipt / proof',
 };
 
+export const evidencePhotoLabelsES: Record<EvidencePhotoType, string> = {
+  front: 'Frente',
+  left_side: 'Lateral izquierdo',
+  right_side: 'Lateral derecho',
+  heel: 'Talón',
+  outsole: 'Suela',
+  size_tag: 'Etiqueta de talla',
+  box_label: 'Etiqueta de caja',
+  top_down: 'Vista superior',
+  defect_closeup: 'Detalle de defecto',
+  receipt: 'Recibo',
+};
+
 export const evidenceQualityRecommendations = [
   'Neutral background',
   'Natural lighting',
@@ -42,6 +55,7 @@ export const evidenceQualityRecommendations = [
 export interface EvidenceChecklistItem {
   type: RequiredEvidencePhotoType;
   label: string;
+  labelES: string;
   complete: boolean;
 }
 
@@ -59,6 +73,11 @@ export interface ProductEvidenceSummary {
   hasReceipt: boolean;
 }
 
+export function getEvidenceScore(product: Pick<Product, 'photos'>): number {
+  const { completedRequired, requiredTotal } = getProductEvidenceSummary(product);
+  return Math.round((completedRequired / requiredTotal) * 100);
+}
+
 export function getProductEvidenceSummary(product: Pick<Product, 'photos'>): ProductEvidenceSummary {
   const presentTypes = new Set(
     product.photos
@@ -69,6 +88,7 @@ export function getProductEvidenceSummary(product: Pick<Product, 'photos'>): Pro
   const checklist = REQUIRED_EVIDENCE_PHOTOS.map((type) => ({
     type,
     label: evidencePhotoLabels[type],
+    labelES: evidencePhotoLabelsES[type],
     complete: presentTypes.has(type),
   }));
   const completedRequired = checklist.filter((item) => item.complete).length;

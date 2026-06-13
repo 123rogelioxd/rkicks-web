@@ -82,6 +82,15 @@ export async function fetchCatalogSlugs(): Promise<string[]> {
     .filter((slug): slug is string => Boolean(slug));
 }
 
+export async function fetchAdminCatalog(): Promise<Product[]> {
+  const data = await fetchNoStoreJson<ApiProduct[]>(cacheBust(`${RKICKS_API_BASE}/catalog`));
+  if (!Array.isArray(data)) throw new Error('RKicks API catalog response was not an array');
+  return data
+    .filter((product) => Boolean(product.slug))
+    .map(mapApiProduct)
+    .filter((product): product is Product => Boolean(product));
+}
+
 export async function fetchLiveProductBySlug(slug: string): Promise<Product | null> {
   const encodedSlug = encodeURIComponent(slug);
   const data = await fetchNoStoreJson<ApiProduct>(cacheBust(`${RKICKS_API_BASE}/products/${encodedSlug}`));

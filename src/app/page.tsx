@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer';
 import RCGStamp from '@/components/rcg/RCGStamp';
 import { WhatsAppSection } from '@/components/whatsapp/WhatsAppCTA';
 import Eyebrow from '@/components/ui/Eyebrow';
+import RealDeliveries from '@/components/social/RealDeliveries';
 import HomeCatalogRuntimeClient from './HomeCatalogRuntimeClient';
 import HomeRuntimeClient from './HomeRuntimeClient';
 import styles from './page.module.css';
@@ -38,6 +39,10 @@ export default function HomePage() {
 
       <main className="rk-zone-bone">
         <HomeCatalogRuntimeClient />
+
+        <div className="rk-zone-bone">
+          <RealDeliveries />
+        </div>
 
         <section className={styles.rcgSection}>
           <div className="rk-page">

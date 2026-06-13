@@ -12,6 +12,7 @@ import ProductCard from '@/components/product/ProductCard';
 import ProductCardFeatured from '@/components/product/ProductCardFeatured';
 import EmptyState from '@/components/ui/EmptyState';
 import Skeleton from '@/components/ui/Skeleton';
+import DemandCaptureWhatsApp from './DemandCaptureWhatsApp';
 import styles from './CatalogClient.module.css';
 
 const PAGE_SIZE = 12;
@@ -189,16 +190,21 @@ export default function CatalogClient({ initialQuery = '' }: Props) {
           onAction={() => openWhatsApp('Hola, no pude ver el catalogo de RKicks. Me ayudas con los pares disponibles?')}
         />
       ) : filtered.length === 0 ? (
-        <EmptyState
-          heading={query ? `Sin resultados para "${query}".` : 'Sin pares con ese filtro.'}
-          body={query ? undefined : 'Intenta con otra talla o marca.'}
-          actionLabel={filters.sizes.length > 0 ? 'Notificarme' : 'Limpiar filtros'}
-          onAction={
-            filters.sizes.length > 0
-              ? handleEmptySizeAction
-              : () => handleFiltersChange({ brands: [], sizes: [], statuses: [], conditions: [] })
-          }
-        />
+        <>
+          <EmptyState
+            heading={query ? `Sin resultados para "${query}".` : 'Sin pares con ese filtro.'}
+            body={query ? undefined : 'Intenta con otra talla o marca.'}
+            actionLabel={filters.sizes.length > 0 ? 'Notificarme' : 'Limpiar filtros'}
+            onAction={
+              filters.sizes.length > 0
+                ? handleEmptySizeAction
+                : () => handleFiltersChange({ brands: [], sizes: [], statuses: [], conditions: [] })
+            }
+          />
+          <div className={styles.demandCapture}>
+            <DemandCaptureWhatsApp />
+          </div>
+        </>
       ) : (
         <div className={styles.grid}>
           {featured && (
