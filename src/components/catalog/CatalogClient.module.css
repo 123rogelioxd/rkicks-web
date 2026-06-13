@@ -41,6 +41,14 @@
   line-height: 1.1;
 }
 
+.tagline {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
 .headerRight {
   display: flex;
   align-items: center;

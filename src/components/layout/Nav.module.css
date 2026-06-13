@@ -107,6 +107,27 @@
   border-color: rgba(240,234,224,0.28);
 }
 
+/* Filled treatment once the cart holds at least one pair — reads as "active" */
+.cartActive {
+  background: rgba(240,234,224,0.10);
+  border-color: rgba(240,234,224,0.32);
+}
+
+/* Brief confirmation pulse fired when a pair is added */
+.cartBump {
+  animation: cartBump 0.5s var(--rk-ease-out);
+}
+
+@keyframes cartBump {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cartBump { animation: none; }
+}
+
 .cartCount {
   position: absolute;
   top: -5px;

@@ -105,8 +105,8 @@
 
 .price {
   font-family: var(--rk-font-sans);
-  font-weight: 700;
-  font-size: 26px;
+  font-weight: 800;
+  font-size: 28px;
   letter-spacing: var(--rk-ls-price);
   color: var(--rk-t1);
   line-height: 1;

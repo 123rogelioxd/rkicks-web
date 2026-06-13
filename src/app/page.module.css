@@ -335,16 +335,35 @@
 
 .sectionHeader {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--rk-sp-3);
-  margin-bottom: var(--rk-sp-5);
+  margin-bottom: var(--rk-sp-6);
+  padding-bottom: var(--rk-sp-4);
+  border-bottom: 1px solid var(--rk-border-0);
+}
+
+@media (min-width: 768px) {
+  .sectionHeader {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
 }
 
 .sectionTitle {
   display: flex;
   flex-direction: column;
-  gap: var(--rk-sp-1);
+  gap: var(--rk-sp-2);
+  max-width: 460px;
+}
+
+.sectionIntro {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
 }
 
 .sectionH {
@@ -371,10 +390,24 @@
 
 .sectionLink:hover { opacity: 0.65; }
 
-.compactGrid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--rk-sp-3);
+/* Homepage product preview — same premium grid cards as the catalog */
+.previewGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rk-sp-4);
+}
+
+@media (min-width: 560px) {
+  .previewGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 900px) {
+  .previewGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* On the 2-col breakpoint the third card spans full width to stay balanced */
+@media (min-width: 560px) and (max-width: 899px) {
+  .previewGrid > :nth-child(3) { grid-column: 1 / -1; }
 }
 
 /* ── RCG Teaser ── */

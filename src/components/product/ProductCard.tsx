@@ -5,7 +5,6 @@ import { getAvailableSizeLabels } from '@/utils/inventory';
 import StatusPill from '@/components/ui/StatusPill';
 import ConditionChip from '@/components/ui/ConditionChip';
 import FlawDot from '@/components/ui/FlawDot';
-import FlawBar from '@/components/ui/FlawBar';
 import RCGPill from '@/components/rcg/RCGPill';
 import ProductImage from './ProductImage';
 import styles from './ProductCard.module.css';
@@ -18,6 +17,14 @@ interface Props {
 export default function ProductCard({ product, variant = 'grid' }: Props) {
   const editorial = product.photos.find((p) => p.type === 'editorial') ?? product.photos[0];
   const availableSizes = getAvailableSizeLabels(product);
+
+  // Honest scarcity — derived only from real available-variant count.
+  const scarcityNote =
+    product.status === 'available' && availableSizes.length > 0 && availableSizes.length <= 2
+      ? availableSizes.length === 1
+        ? 'Última talla disponible'
+        : 'Pocas piezas disponibles'
+      : null;
 
   return (
     <Link
@@ -44,11 +51,17 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
 
         <div className={styles.meta}>
           {availableSizes.length > 0 && (
-            <span className={styles.availableSizes}>Tallas disponibles: {availableSizes.join(' / ')}</span>
+            <span className={styles.availableSizes}>Tallas: {availableSizes.join(' / ')}</span>
           )}
           <ConditionChip condition={product.condition} />
-          <FlawBar level={product.flawLevel} />
         </div>
+
+        {scarcityNote && (
+          <span className={styles.scarcity}>
+            <span className={styles.scarcityDot} aria-hidden="true" />
+            {scarcityNote}
+          </span>
+        )}
 
         <div className={styles.priceRow}>
           <span className={styles.price}>{formatPrice(product.price)}</span>

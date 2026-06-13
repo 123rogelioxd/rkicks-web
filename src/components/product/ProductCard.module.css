@@ -22,13 +22,19 @@
 }
 
 /* ── Image zone ── */
+/* Image is the dominant element of the card — taller frame, more presence */
 .imageWrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 0.85;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--rk-surface-2);
   flex-shrink: 0;
+  transition: background var(--rk-dur-base) var(--rk-ease-out);
+}
+
+.card:hover .imageWrap {
+  background: var(--rk-elevated);
 }
 
 .flawDotWrap {
@@ -40,7 +46,7 @@
 
 /* ── Info zone ── */
 .body {
-  padding: 10px 12px;
+  padding: 14px 16px 16px;
   display: flex;
   flex-direction: column;
   gap: var(--rk-sp-2);
@@ -90,15 +96,36 @@
   justify-content: space-between;
   gap: var(--rk-sp-2);
   margin-top: auto;
+  padding-top: var(--rk-sp-1);
 }
 
 .price {
   font-family: var(--rk-font-sans);
-  font-weight: 700;
-  font-size: var(--rk-fs-price-card);
-  letter-spacing: var(--rk-ls-heading);
+  font-weight: 800;
+  font-size: 23px;
+  letter-spacing: var(--rk-ls-price);
   color: var(--rk-t1);
   line-height: 1;
+}
+
+/* ── Honest scarcity note — driven by real available-variant count ── */
+.scarcity {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: var(--rk-ls-mono);
+  text-transform: uppercase;
+  color: var(--rk-reserved);
+}
+
+.scarcityDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--rk-reserved);
+  flex-shrink: 0;
 }
 
 /* ── Compact / horizontal variant (homepage) ── */

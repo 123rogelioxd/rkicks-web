@@ -65,24 +65,27 @@ export default function HomeCatalogRuntimeClient() {
         <div className="rk-page">
           <div className={styles.sectionHeader}>
             <div className={styles.sectionTitle}>
-              <Eyebrow>Disponible ahora</Eyebrow>
-              <h2 className={styles.sectionH}>Pares disponibles</h2>
+              <Eyebrow>Selección privada</Eyebrow>
+              <h2 className={styles.sectionH}>Pares disponibles ahora</h2>
+              <p className={styles.sectionIntro}>
+                Inventario limitado. Cada par es una pieza única, verificada y lista para llevar.
+              </p>
             </div>
             <Link href="/catalogo" className={styles.sectionLink}>
-              Ver catalogo -&gt;
+              Ver catálogo -&gt;
             </Link>
           </div>
 
           {loading ? (
-            <div className={styles.compactGrid} aria-busy="true" aria-label="Cargando productos recientes">
+            <div className={styles.previewGrid} aria-busy="true" aria-label="Cargando productos recientes">
               {Array.from({ length: 3 }).map((_, index) => (
-                <Skeleton key={index} height={210} radius="var(--rk-radius-md)" />
+                <Skeleton key={index} height={340} radius="var(--rk-radius-md)" />
               ))}
             </div>
           ) : (
-            <div className={styles.compactGrid}>
+            <div className={styles.previewGrid}>
               {recentPairs.map((product) => (
-                <ProductCard key={product.id} product={product} variant="compact" />
+                <ProductCard key={product.id} product={product} variant="grid" />
               ))}
             </div>
           )}

@@ -122,10 +122,11 @@ export default function CatalogClient({ initialQuery = '' }: Props) {
       <div className={styles.header}>
         <div className={styles.headerRow}>
           <div className={styles.headerLeft}>
-            <p className={styles.eyebrow}>Catálogo</p>
+            <p className={styles.eyebrow}>Selección privada · Inventario limitado</p>
             <h1 className={styles.count}>
               {filtered.length} {filtered.length === 1 ? 'par' : 'pares'}
             </h1>
+            <p className={styles.tagline}>Piezas únicas, verificadas una por una.</p>
           </div>
 
           <div className={styles.headerRight}>

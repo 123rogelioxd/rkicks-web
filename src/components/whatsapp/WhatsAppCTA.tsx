@@ -76,7 +76,7 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
     return availableVariants.map((variant) => variant.sizeLabel).join(' / ');
   }, [availableVariants, product, selectedVariant]);
   const ctaLabel = {
-    available: 'Preguntar por WhatsApp',
+    available: 'Comprar por WhatsApp',
     reserved: 'Unirse a la lista de espera',
     'pre-order': 'Reservar mi par',
     sold: null,
