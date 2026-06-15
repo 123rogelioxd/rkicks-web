@@ -132,58 +132,6 @@
   .heroImage { width: 58%; }
 }
 
-/* Trust strip — sits directly under the hero, same ink zone */
-.heroTrust {
-  position: relative;
-  z-index: 1;
-  background: var(--rk-ink);
-  border-top: 1px solid var(--rk-border-ink);
-}
-
-.heroTrustInner {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: var(--rk-sp-4);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--rk-sp-4);
-}
-
-@media (min-width: 600px) {
-  .heroTrustInner { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (min-width: 1024px) {
-  .heroTrustInner {
-    grid-template-columns: repeat(4, 1fr);
-    padding: var(--rk-sp-5) var(--rk-sp-10);
-    gap: var(--rk-sp-6);
-  }
-}
-
-.heroTrustItem {
-  display: flex;
-  flex-direction: column;
-  gap: var(--rk-sp-1);
-}
-
-.heroTrustTitle {
-  font-family: var(--rk-font-sans);
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: -0.01em;
-  color: var(--rk-t-bone);
-}
-
-.heroTrustBody {
-  font-family: var(--rk-font-sans);
-  font-weight: 400;
-  font-size: 11px;
-  line-height: var(--rk-lh-relaxed);
-  color: var(--rk-t-bone-dim);
-}
-
 /* Eyebrow — unchanged token usage */
 .heroEyebrow {
   font-family: var(--rk-font-mono);
@@ -408,6 +356,90 @@
 /* On the 2-col breakpoint the third card spans full width to stay balanced */
 @media (min-width: 560px) and (max-width: 899px) {
   .previewGrid > :nth-child(3) { grid-column: 1 / -1; }
+}
+
+/* ── Cómo comprar ── */
+.howSection {
+  padding: var(--rk-sp-7) 0;
+  border-top: 1px solid var(--rk-border-0);
+}
+
+.howHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-2);
+  max-width: 460px;
+  margin-bottom: var(--rk-sp-6);
+}
+
+.howH {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h2);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: 1.1;
+}
+
+.howIntro {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+.howGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rk-sp-4);
+}
+
+@media (min-width: 560px) {
+  .howGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 900px) {
+  .howGrid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.howStep {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-2);
+  padding: var(--rk-sp-5);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-md);
+  box-shadow: var(--rk-shadow-card);
+}
+
+.howStepNum {
+  font-family: var(--rk-font-mono);
+  font-size: var(--rk-fs-eyebrow);
+  letter-spacing: var(--rk-ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.howStepTitle {
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h4);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+}
+
+.howStepBody {
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
 }
 
 /* ── RCG Teaser ── */

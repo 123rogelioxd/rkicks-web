@@ -16,7 +16,7 @@ export default function RealDeliveries({ photos = [] }: Props) {
       <div className="rk-page">
         <div className={styles.inner}>
           <div className={styles.header}>
-            <p className={styles.eyebrow}>Social proof</p>
+            <p className={styles.eyebrow}>Clientes reales</p>
             <h2 className={styles.heading}>Entregas reales RKicks</h2>
           </div>
 

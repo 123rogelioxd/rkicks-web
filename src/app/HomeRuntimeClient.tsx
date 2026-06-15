@@ -81,11 +81,6 @@ export default function HomeRuntimeClient() {
             </span>
           </>
         )}
-
-        <span className={styles.heroStatDiv} aria-hidden="true" />
-        <span className={styles.heroStat}>
-          Garantía Real Condition
-        </span>
       </div>
 
       <div className={styles.heroCTARow}>

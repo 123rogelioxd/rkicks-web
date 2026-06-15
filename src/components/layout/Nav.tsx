@@ -6,7 +6,7 @@ import styles from './Nav.module.css';
 
 const links = [
   { href: '/catalogo',       label: 'Catálogo' },
-  { href: '/real-condition', label: 'Real Condition' },
+  { href: '/real-condition', label: 'Condición Verificada' },
   { href: '/nosotros',       label: 'Nosotros' },
 ];
 

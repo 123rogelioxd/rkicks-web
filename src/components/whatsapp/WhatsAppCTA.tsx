@@ -29,7 +29,7 @@ export function WhatsAppSection() {
     <section className={styles.section}>
       <div className={styles.sectionInner}>
         <p className={styles.sectionSub}>Curado por gente que sabe</p>
-        <h2 className={styles.sectionHeading}>Tienes preguntas sobre algun par?</h2>
+        <h2 className={styles.sectionHeading}>¿Tienes preguntas sobre algún par?</h2>
         <button
           type="button"
           className={styles.btn}

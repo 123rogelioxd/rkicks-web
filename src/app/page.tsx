@@ -27,40 +27,19 @@ export default function HomePage() {
 
             <div className={styles.heroContent}>
               <p className={styles.heroEyebrow}>
-                Sneakers premium · México
+                Tenis premium · México
               </p>
 
               <h1 className={styles.heroHeadline}>
-                Selección privada de sneakers.
+                Tenis originales. Estado real. Sin sorpresas.
               </h1>
 
               <p className={styles.heroDescriptor}>
-                Pares originales, verificados y listos para comprar por WhatsApp.
-                Sin vueltas, sin sorpresas.
+                Fotografiamos cada par con su estado real y documentamos cada
+                detalle. Apártalo por WhatsApp sin letra chica ni sorpresas.
               </p>
 
               <HomeRuntimeClient />
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.heroTrust}>
-          <div className={styles.heroTrustInner}>
-            <div className={styles.heroTrustItem}>
-              <span className={styles.heroTrustTitle}>Foto del par exacto</span>
-              <span className={styles.heroTrustBody}>Ves lo que vas a recibir.</span>
-            </div>
-            <div className={styles.heroTrustItem}>
-              <span className={styles.heroTrustTitle}>Autenticidad revisada</span>
-              <span className={styles.heroTrustBody}>Sin réplicas.</span>
-            </div>
-            <div className={styles.heroTrustItem}>
-              <span className={styles.heroTrustTitle}>Garantía Real Condition</span>
-              <span className={styles.heroTrustBody}>Si no coincide, te devolvemos tu dinero.</span>
-            </div>
-            <div className={styles.heroTrustItem}>
-              <span className={styles.heroTrustTitle}>Compra asistida</span>
-              <span className={styles.heroTrustBody}>Te ayudamos por WhatsApp.</span>
             </div>
           </div>
         </div>
@@ -68,6 +47,53 @@ export default function HomePage() {
 
       <main className="rk-zone-bone">
         <HomeCatalogRuntimeClient />
+
+        <section className={styles.howSection}>
+          <div className="rk-page">
+            <div className={styles.howHeader}>
+              <Eyebrow>Cómo comprar</Eyebrow>
+              <h2 className={styles.howH}>Comprar es así de simple</h2>
+              <p className={styles.howIntro}>
+                Cuatro pasos, sin fricción y con acompañamiento real por
+                WhatsApp en cada uno.
+              </p>
+            </div>
+
+            <ol className={styles.howGrid}>
+              <li className={styles.howStep}>
+                <span className={styles.howStepNum}>01</span>
+                <h3 className={styles.howStepTitle}>Explora el inventario</h3>
+                <p className={styles.howStepBody}>
+                  Revisa los pares disponibles con fotos reales y su condición
+                  documentada.
+                </p>
+              </li>
+              <li className={styles.howStep}>
+                <span className={styles.howStepNum}>02</span>
+                <h3 className={styles.howStepTitle}>Escríbenos por WhatsApp</h3>
+                <p className={styles.howStepBody}>
+                  Confirmamos talla, estado y disponibilidad al momento, sin
+                  compromiso.
+                </p>
+              </li>
+              <li className={styles.howStep}>
+                <span className={styles.howStepNum}>03</span>
+                <h3 className={styles.howStepTitle}>Aparta con el 50%</h3>
+                <p className={styles.howStepBody}>
+                  Acordamos el método de pago y aseguras tu par con el 50%.
+                </p>
+              </li>
+              <li className={styles.howStep}>
+                <span className={styles.howStepNum}>04</span>
+                <h3 className={styles.howStepTitle}>Recíbelo donde estés</h3>
+                <p className={styles.howStepBody}>
+                  Coordinamos el envío o la entrega por WhatsApp, hasta que tu
+                  par llegue a ti.
+                </p>
+              </li>
+            </ol>
+          </div>
+        </section>
 
         <div className="rk-zone-bone">
           <RealDeliveries />
@@ -77,17 +103,18 @@ export default function HomePage() {
           <div className="rk-page">
             <div className={styles.rcgInner}>
               <div className={styles.rcgLeft}>
-                <Eyebrow>Real Condition Guarantee</Eyebrow>
+                <Eyebrow>Condición Verificada</Eyebrow>
                 <h2 className={styles.rcgHeadline}>
                   Lo que ves es lo que llega.
                 </h2>
                 <p className={styles.rcgBody}>
-                  Cada par es fotografiado con luz honesta. Cada defecto esta documentado,
-                  numerado y descrito en lenguaje simple. Si algo no coincide con lo que
-                  publicamos, te devolvemos tu dinero.
+                  Cada par es original y se fotografía con luz honesta.
+                  Documentamos su estado real: cada detalle, numerado y descrito
+                  en palabras simples. Si algo no coincide con lo que publicamos,
+                  te devolvemos tu dinero.
                 </p>
                 <Link href="/real-condition" className={styles.rcgLink}>
-                  Conocer el programa -&gt;
+                  Conocer cómo verificamos -&gt;
                 </Link>
               </div>
               <div className={styles.rcgRight}>
