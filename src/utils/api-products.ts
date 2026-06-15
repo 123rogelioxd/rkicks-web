@@ -153,6 +153,7 @@ export function mapApiProduct(apiProduct: ApiProduct): Product | null {
     status: getProductStatus(apiProduct, variants),
     variants,
     condition: mapCondition(conditionReport?.condition_grade ?? apiProduct.condition),
+    conditionScore: mapConditionScore(conditionReport?.condition_grade),
     flawLevel: mapFlawLevel(conditionReport?.flaw_level ?? apiProduct.flaw_level),
     flaws: mapFlaws(apiProduct.flaws, conditionReport),
     box: mapBox(conditionReport?.box_status ?? apiProduct.box_status),
@@ -312,6 +313,19 @@ function mapCondition(condition: unknown): ConditionGrade {
   if (normalized === 'good') return 'good';
   if (normalized === 'fair') return 'fair';
   return 'new';
+}
+
+/**
+ * Numeric condition grade → 0-100 percentage. Accepts a 0-10 grade ("9.0")
+ * or an already-percentage value (0-100). Enum strings ("new") yield NaN and
+ * return undefined so the PDP falls back to the grade-based default.
+ */
+function mapConditionScore(grade: unknown): number | undefined {
+  if (grade === null || grade === undefined || grade === '') return undefined;
+  const numeric = typeof grade === 'number' ? grade : Number(grade);
+  if (!Number.isFinite(numeric) || numeric <= 0) return undefined;
+  const percent = numeric <= 10 ? numeric * 10 : numeric;
+  return Math.min(100, Math.max(0, Math.round(percent)));
 }
 
 function mapFlawLevel(level: unknown): FlawLevel {

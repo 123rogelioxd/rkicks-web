@@ -22,47 +22,47 @@
   border-bottom: 1px solid var(--rk-border-0);
 }
 
-.purchaseTrustInline {
-  margin-top: var(--rk-sp-5);
-}
-
-/* ── Real Condition section ── */
-.rcgSection {
+/* ── Por qué funciona este par ── */
+.whySection {
   padding-top: var(--rk-sp-7);
-  padding-bottom: var(--rk-sp-9);
-  border-bottom: 1px solid var(--rk-border-0);
-  display: flex;
-  flex-direction: column;
-  gap: var(--rk-sp-6);
+  padding-bottom: var(--rk-sp-7);
+  border-top: 1px solid var(--rk-border-0);
 }
 
-.rcgHeader {
+/* ── Single compact trust line (+ flaw detail when present) ── */
+.trustSection {
+  padding-top: var(--rk-sp-6);
+  padding-bottom: var(--rk-sp-7);
+  border-top: 1px solid var(--rk-border-0);
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  flex-direction: column;
   gap: var(--rk-sp-4);
 }
 
-.rcgHeading {
+.trustLine {
+  margin: 0;
+  max-width: 64ch;
   font-family: var(--rk-font-sans);
-  font-weight: 700;
-  font-size: var(--rk-fs-h3);
-  letter-spacing: var(--rk-ls-heading);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+.trustLink {
+  align-self: flex-start;
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--rk-t1);
-  line-height: var(--rk-lh-snug);
-  margin: var(--rk-sp-1) 0 0;
+  text-decoration: none;
+  border-bottom: 1px solid var(--rk-border-1);
+  padding-bottom: 1px;
+  transition: border-color var(--rk-dur-fast) var(--rk-ease-out);
 }
 
-.rcgStampWrap {
-  flex-shrink: 0;
-  padding-top: 2px;
-}
-
-.rcgBody {
-  display: flex;
-  flex-direction: column;
-  gap: var(--rk-sp-4);
-}
+.trustLink:hover { border-color: var(--rk-t1); }
 
 /* ── Complete The Fit ── */
 .ctfSection {
@@ -78,6 +78,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--rk-sp-3);
+}
+
+.ctaNote {
+  font-family: var(--rk-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--rk-t3);
+  line-height: var(--rk-lh-normal);
 }
 
 /* ── Sold state ── */

@@ -1,0 +1,78 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-3);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--rk-font-mono);
+  font-size: var(--rk-fs-eyebrow);
+  letter-spacing: var(--rk-ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-h3);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+}
+
+.lead {
+  margin: 0;
+  max-width: 60ch;
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}
+
+.pairings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rk-sp-2) var(--rk-sp-3);
+  margin-top: var(--rk-sp-1);
+}
+
+.pairingsLabel {
+  font-family: var(--rk-font-mono);
+  font-size: var(--rk-fs-eyebrow);
+  letter-spacing: var(--rk-ls-mono);
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rk-sp-2);
+}
+
+.chip {
+  padding: 4px 11px;
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-pill);
+  font-family: var(--rk-font-mono);
+  font-size: 9px;
+  letter-spacing: var(--rk-ls-chip);
+  text-transform: uppercase;
+  color: var(--rk-t2);
+  white-space: nowrap;
+}
+
+.useCase {
+  margin: 0;
+  font-family: var(--rk-font-sans);
+  font-weight: 400;
+  font-size: var(--rk-fs-small);
+  color: var(--rk-t2);
+  line-height: var(--rk-lh-relaxed);
+}

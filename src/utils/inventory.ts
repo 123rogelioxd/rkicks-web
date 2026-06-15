@@ -1,4 +1,4 @@
-import type { Product, ProductStatus, ConditionGrade, FlawLevel, ProductVariant } from '@/types/product';
+import type { Product, ProductStatus, ConditionGrade, FlawLevel, BoxStatus, ProductVariant } from '@/types/product';
 
 export const conditionLabel: Record<ConditionGrade, string> = {
   'new':       'New',
@@ -15,6 +15,30 @@ export const conditionLabelES: Record<ConditionGrade, string> = {
   'good':      'Bueno',
   'fair':      'Regular',
 };
+
+/** Condition grade expressed as a quick-scan percentage for the PDP summary. */
+export const conditionPercent: Record<ConditionGrade, number> = {
+  'new':       100,
+  'like-new':  95,
+  'excellent': 90,
+  'good':      80,
+  'fair':      70,
+};
+
+/** Compact box-status labels for the PDP quick summary. */
+export const boxShortLabelES: Record<BoxStatus, string> = {
+  original:    'Original',
+  replacement: 'De reemplazo',
+  none:        'Sin caja',
+};
+
+/**
+ * Condition percentage shown in the PDP summary. Prefers the merchant's real
+ * graded score when present; falls back to the grade-based default.
+ */
+export function getConditionPercent(product: Pick<Product, 'condition' | 'conditionScore'>): number {
+  return product.conditionScore ?? conditionPercent[product.condition];
+}
 
 export const statusLabelES: Record<ProductStatus, string> = {
   'available': 'Disponible',

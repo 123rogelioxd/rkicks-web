@@ -8,7 +8,7 @@ import styles from './[slug]/page.module.css';
 
 export const metadata: Metadata = {
   title: 'Producto - RKicks',
-  description: 'Producto RKicks cargado desde el catalogo en vivo. Real Condition Guarantee.',
+  description: 'Ficha del par en RKicks: talla, condición, caja y originalidad confirmada. Apártalo por WhatsApp.',
 };
 
 export default function ProductQueryPage() {

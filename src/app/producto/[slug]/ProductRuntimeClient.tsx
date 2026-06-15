@@ -4,18 +4,13 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import ProductGallery from '@/components/product/ProductGallery';
 import ProductMeta from '@/components/product/ProductMeta';
-import ConditionTable from '@/components/rcg/ConditionTable';
+import ProductQuickSummary from '@/components/product/ProductQuickSummary';
+import WhyItWorks from '@/components/product/WhyItWorks';
 import FlawMap from '@/components/rcg/FlawMap';
-import AuthenticityBlock from '@/components/rcg/AuthenticityBlock';
 import RelatedProducts from '@/components/product/RelatedProducts';
-import RCGStamp from '@/components/rcg/RCGStamp';
 import CompleteTheFit from '@/components/ecosystem/CompleteTheFit';
 import { WhatsAppProductCTA } from '@/components/whatsapp/WhatsAppCTA';
-import PurchaseTrust from '@/components/conversion/PurchaseTrust';
-import ProductEvidenceBadges from '@/components/evidence/ProductEvidenceBadges';
-import NewVerified from '@/components/evidence/NewVerified';
 import DemandCaptureWhatsApp from '@/components/catalog/DemandCaptureWhatsApp';
-import Eyebrow from '@/components/ui/Eyebrow';
 import EmptyState from '@/components/ui/EmptyState';
 import Skeleton from '@/components/ui/Skeleton';
 import type { Product, ProductVariant } from '@/types/product';
@@ -147,15 +142,15 @@ export default function ProductRuntimeClient({
               selectedVariant={selectedVariant}
               onSelectVariant={setSelectedVariant}
             />
-            <div className={styles.purchaseTrustInline}>
-              <PurchaseTrust />
-            </div>
+            <ProductQuickSummary product={product} selectedVariant={selectedVariant} />
           </section>
 
           {product.status !== 'sold' && (
             <section className={styles.ctaSection}>
-              <ProductEvidenceBadges product={product} variant="cta" />
               <WhatsAppProductCTA product={product} selectedVariant={selectedVariant} />
+              <p className={styles.ctaNote}>
+                Apartas con el 50%. Coordinamos pago y entrega por WhatsApp.
+              </p>
             </section>
           )}
 
@@ -177,26 +172,21 @@ export default function ProductRuntimeClient({
             </div>
           )}
 
-          <section className={styles.rcgSection}>
-            <div className={styles.rcgHeader}>
-              <div>
-                <Eyebrow>Real Condition Guarantee</Eyebrow>
-                <h2 className={styles.rcgHeading}>Lo que ves es lo que llega.</h2>
-              </div>
-              <div className={styles.rcgStampWrap}>
-                <RCGStamp />
-              </div>
-            </div>
+          <section className={styles.whySection}>
+            <WhyItWorks product={product} />
+          </section>
 
-            <div className={styles.rcgBody}>
-              <ProductEvidenceBadges product={product} />
-              <NewVerified product={product} />
-              <ConditionTable product={product} selectedVariant={selectedVariant} />
-              {product.flaws.length > 0 && (
-                <FlawMap flaws={product.flaws} flawLevel={product.flawLevel} />
-              )}
-              <AuthenticityBlock product={product} />
-            </div>
+          <section className={styles.trustSection}>
+            <p className={styles.trustLine}>
+              Fotos reales del par y Condición Verificada por RKicks. Si algo no
+              coincide con lo que ves, te regresamos tu dinero.
+            </p>
+            <Link href="/real-condition" className={styles.trustLink}>
+              Cómo revisamos cada par -&gt;
+            </Link>
+            {product.flaws.length > 0 && (
+              <FlawMap flaws={product.flaws} flawLevel={product.flawLevel} />
+            )}
           </section>
 
           {pairing && (

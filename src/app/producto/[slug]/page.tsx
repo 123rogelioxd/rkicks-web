@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   return {
     title: `${slug.replace(/-/g, ' ')} - RKicks`,
-    description: 'Producto RKicks cargado desde el catalogo en vivo. Real Condition Guarantee.',
+    description: 'Ficha del par en RKicks: talla, condición, caja y originalidad confirmada. Apártalo por WhatsApp.',
   };
 }
 

@@ -1,0 +1,72 @@
+.wrap {
+  margin-top: var(--rk-sp-5);
+}
+
+.eyebrow {
+  margin: 0 0 var(--rk-sp-3);
+  font-family: var(--rk-font-mono);
+  font-size: var(--rk-fs-eyebrow);
+  letter-spacing: var(--rk-ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+/* 1px gap + border-coloured background renders clean hairline dividers
+   between cells without per-cell borders. */
+.grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rk-border-0);
+  border: 1px solid var(--rk-border-0);
+  border-radius: var(--rk-radius-md);
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* On 2-col mobile the 5th item spans full width — no empty trailing cell. */
+@media (max-width: 639px) {
+  .cell:last-child { grid-column: 1 / -1; }
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rk-sp-1);
+  padding: var(--rk-sp-3) var(--rk-sp-4);
+  background: var(--rk-surface);
+}
+
+.cellLabel {
+  font-family: var(--rk-font-mono);
+  font-size: var(--rk-fs-eyebrow);
+  letter-spacing: var(--rk-ls-mono);
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}
+
+.cellValue {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--rk-font-sans);
+  font-weight: 700;
+  font-size: var(--rk-fs-body);
+  letter-spacing: var(--rk-ls-heading);
+  color: var(--rk-t1);
+  line-height: var(--rk-lh-snug);
+}
+
+.cellHint {
+  font-family: var(--rk-font-mono);
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: var(--rk-ls-mono);
+  text-transform: uppercase;
+  color: var(--rk-t3);
+}

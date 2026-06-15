@@ -60,6 +60,7 @@ export interface Product {
   status:    ProductStatus;
   variants:  ProductVariant[];
   condition: ConditionGrade;
+  conditionScore?: number;
   flawLevel: FlawLevel;
   flaws:     Flaw[];
   box:       BoxStatus;
