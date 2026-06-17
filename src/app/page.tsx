@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Nav from '@/components/layout/Nav';
 import Footer from '@/components/layout/Footer';
 import RCGStamp from '@/components/rcg/RCGStamp';
@@ -19,15 +20,20 @@ export default function HomePage() {
           <div className={styles.heroBg} aria-hidden="true" />
 
           <div className={styles.heroInner}>
-            <div
-              className={styles.heroImage}
-              aria-hidden="true"
-              style={{ backgroundImage: "url('/images/hero/rkicks-hero-jordan.jpg')" }}
-            />
+            <div className={styles.heroImage} aria-hidden="true">
+              <Image
+                src="/images/hero/rkicks-hero-jordan.png"
+                alt=""
+                fill
+                priority
+                className={styles.heroImageAsset}
+                sizes="(min-width: 1024px) 58vw, (min-width: 768px) 56vw, 100vw"
+              />
+            </div>
 
             <div className={styles.heroContent}>
               <p className={styles.heroEyebrow}>
-                Tenis premium · México
+                Tenis premium · Oaxaca
               </p>
 
               <h1 className={styles.heroHeadline}>

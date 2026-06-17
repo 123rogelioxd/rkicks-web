@@ -58,17 +58,27 @@
 }
 
 /*
-  Hero sneaker visual. Static asset lives in /public/images/hero/.
-  If the file is missing the element stays transparent and the dark
-  gradient (.heroBg) shows through — graceful fallback, no broken image.
+  Hero sneaker visual. next/image fill + priority — preloaded, WebP, no 404 risk.
+  The ::after scrim sits above the image via z-index; the .heroImageAsset class
+  controls object-fit/position responsively.
 */
 .heroImage {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-position: center right;
-  background-size: cover;
-  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+/* Responsive object-position mirrors the old background-position rules */
+.heroImageAsset {
+  object-fit: cover;
+  object-position: center right;
+}
+
+@media (min-width: 768px) {
+  .heroImageAsset {
+    object-position: center;
+  }
 }
 
 /* Mobile scrim: full-bleed photo behind text, darkened so copy stays readable */
@@ -76,6 +86,7 @@
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(
     180deg,
     rgba(13, 11, 8, 0.55) 0%,
@@ -109,11 +120,11 @@
     left: auto;
     right: 0;
     width: 56%;
-    background-position: center;
   }
 
   /* Horizontal scrim only — fades photo into ink behind the text, no full darken */
   .heroImage::after {
+    z-index: 1;
     background: linear-gradient(
       90deg,
       var(--rk-ink) 0%,
