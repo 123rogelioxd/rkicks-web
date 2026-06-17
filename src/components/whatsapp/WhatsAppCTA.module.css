@@ -142,14 +142,17 @@
 
 .checkoutLink {
   align-self: center;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rk-border-ink);
+  padding: 0 0 2px;
+  cursor: pointer;
   color: var(--rk-t-bone);
   font-family: var(--rk-font-mono);
   font-size: 9px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  border-bottom: 1px solid var(--rk-border-ink);
-  padding-bottom: 2px;
 }
 
 .stickyMeta {

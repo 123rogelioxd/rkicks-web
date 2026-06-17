@@ -26,7 +26,6 @@ export default function CheckoutClient() {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [checking, setChecking] = useState(true);
-  const [nameError, setNameError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,9 +74,8 @@ export default function CheckoutClient() {
     }),
     [items, customerName, customerPhone]
   );
-  const hasCustomerName = customerName.trim().length > 0;
   const canCheckout = items.length > 0 && !hasUnavailable && !checking;
-  const canFinalize = canCheckout && hasCustomerName;
+  const canFinalize = canCheckout;
 
   const handleRemove = (item: CheckoutCartItem) => {
     setItems(removeCartItem(getCartItemIdentity(item)));
@@ -98,8 +96,8 @@ export default function CheckoutClient() {
         {items.length === 0 ? (
           <div className={styles.emptyWrap}>
             <EmptyState
-              heading="Tu checkout esta vacio."
-              body="Agrega un par disponible desde el catalogo para continuar."
+              heading="Tu carrito está vacío."
+              body="Agrega un par disponible desde el catálogo para continuar."
             />
             <Link href="/catalogo" className={styles.emptyLink}>
               Ver catalogo
@@ -159,7 +157,7 @@ export default function CheckoutClient() {
                       </div>
 
                       {item.unavailable && (
-                        <p className={styles.unavailable}>Esta talla ya no esta disponible. Quitala para finalizar.</p>
+                        <p className={styles.unavailable}>Esta talla ya no está disponible. Quítala para finalizar.</p>
                       )}
                     </div>
                   </article>
@@ -176,21 +174,16 @@ export default function CheckoutClient() {
               <PurchaseTrust variant="checkout" />
 
               <label className={styles.field}>
-                Nombre
+                Nombre (opcional)
                 <input
                   value={customerName}
-                  onChange={(event) => {
-                    setCustomerName(event.target.value);
-                    if (event.target.value.trim()) setNameError(false);
-                  }}
+                  onChange={(event) => setCustomerName(event.target.value)}
                   placeholder="Tu nombre"
-                  aria-invalid={nameError}
                 />
-                {nameError && <span className={styles.fieldError}>Escribe tu nombre para finalizar.</span>}
               </label>
 
               <label className={styles.field}>
-                Telefono opcional
+                Teléfono (opcional)
                 <input
                   value={customerPhone}
                   onChange={(event) => setCustomerPhone(event.target.value)}
@@ -198,7 +191,9 @@ export default function CheckoutClient() {
                 />
               </label>
 
-              <pre className={styles.preview}>{message}</pre>
+              <p className={styles.messageHint}>
+                Te llevamos a WhatsApp con tu par y talla ya escritos.
+              </p>
 
               <a
                 className={`${styles.finalize} ${!canFinalize ? styles.finalizeDisabled : ''}`}
@@ -207,7 +202,6 @@ export default function CheckoutClient() {
                 onClick={(event) => {
                   if (!canFinalize) {
                     event.preventDefault();
-                    if (canCheckout && !hasCustomerName) setNameError(true);
                     return;
                   }
                   trackEvent('checkout_whatsapp_sent', {

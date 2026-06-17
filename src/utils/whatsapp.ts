@@ -44,9 +44,9 @@ export function buildRKicksCheckoutMessage({
   const multiple = normalizedItems.length > 1;
   const total = normalizedItems.reduce((sum, item) => sum + item.price * (item.quantity ?? 1), 0);
   const lines = [
-    'Hola',
+    'Hola 👋',
     '',
-    multiple ? 'Me interesan estos pares:' : 'Me interesa este par:',
+    multiple ? 'Quiero apartar estos pares:' : 'Quiero apartar este par:',
     '',
     ...normalizedItems.map(formatWhatsAppItem),
   ];
@@ -55,27 +55,28 @@ export function buildRKicksCheckoutMessage({
     lines.push('', `Total: ${formatPrice(total)} MXN`);
   }
 
-  lines.push('');
-  lines.push(`Mi nombre es ${cleanField(customerName) || '____'}.`);
-
+  const name = cleanField(customerName);
   const phone = cleanField(customerPhone);
-  if (phone) lines.push(`Mi telefono es ${phone}.`);
+
+  if (name || phone) lines.push('');
+  if (name) lines.push(`Mi nombre es ${name}.`);
+  if (phone) lines.push(`Mi teléfono es ${phone}.`);
 
   lines.push('');
-  lines.push('Quedo pendiente de disponibilidad y detalles de compra.');
+  lines.push('¿Me confirmas pago y entrega?');
 
   return cleanMessage(lines.join('\n'));
 }
 
 export function buildReservedMessage(product: Product, selectedVariant?: ProductVariant | null): string {
   return cleanMessage(
-    `Hola\n\nQuiero unirme a la lista de espera:\n\n- ${product.model} - ${getVariantPrimarySizeLabel(product, selectedVariant)}\n\nMi nombre es ____.`
+    `Hola 👋\n\nQuiero unirme a la lista de espera:\n\n• ${product.model} — ${getVariantPrimarySizeLabel(product, selectedVariant)}\n\n¿Me confirmas cuando esté disponible?`
   );
 }
 
 export function buildPreorderMessage(product: Product, selectedVariant?: ProductVariant | null): string {
   return cleanMessage(
-    `Hola\n\nQuiero reservar este par:\n\n- ${product.model} - ${getVariantPrimarySizeLabel(product, selectedVariant)}\n\nMi nombre es ____.`
+    `Hola 👋\n\nQuiero reservar este par:\n\n• ${product.model} — ${getVariantPrimarySizeLabel(product, selectedVariant)}\n\n¿Me confirmas pago y entrega?`
   );
 }
 
@@ -86,11 +87,11 @@ export function buildSizeNotifyMessage(sizeMx: number): string {
 export function buildDemandCaptureMessage(product?: Product): string {
   if (product) {
     return cleanMessage(
-      `Hola\n\nEstoy buscando este par en otra talla:\n\n• ${product.model}\n• Talla deseada: ____\n\nMi nombre es ____.\n\nQuedo pendiente si lo consiguen.`,
+      `Hola 👋\n\nEstoy buscando este par en otra talla:\n\n• ${product.model}\n• Talla deseada: ____\n\n¿Me avisas si lo consiguen?`,
     );
   }
   return cleanMessage(
-    `Hola\n\nEstoy buscando un par que no encuentro en el catálogo.\n\nMi nombre es ____.\n\nQuedo pendiente si lo consiguen.`,
+    `Hola 👋\n\nEstoy buscando un par que no encuentro en el catálogo.\n\n¿Me avisas si lo consiguen?`,
   );
 }
 

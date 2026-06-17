@@ -224,17 +224,13 @@
   text-transform: none;
 }
 
-.preview {
-  white-space: pre-wrap;
+.messageHint {
   margin: 0;
-  padding: var(--rk-sp-4);
-  background: rgba(240,234,224,0.08);
-  border: 1px solid var(--rk-border-ink);
-  border-radius: var(--rk-radius-sm);
-  color: var(--rk-t-bone);
   font-family: var(--rk-font-sans);
   font-size: 12px;
-  line-height: 1.55;
+  color: var(--rk-t-bone-dim);
+  text-align: center;
+  line-height: 1.5;
 }
 
 .finalize {

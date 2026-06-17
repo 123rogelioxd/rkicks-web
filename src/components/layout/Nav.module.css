@@ -221,3 +221,11 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
+
+/* Reset for button elements used as nav items */
+.overlayBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}

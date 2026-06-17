@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next';
+import { CartProvider } from '@/context/CartContext';
+import CartDrawer from '@/components/cart/CartDrawer';
 import '../styles/tokens.css';
 import '../styles/base.css';
 
@@ -38,7 +40,12 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <CartProvider>
+          {children}
+          <CartDrawer />
+        </CartProvider>
+      </body>
     </html>
   );
 }

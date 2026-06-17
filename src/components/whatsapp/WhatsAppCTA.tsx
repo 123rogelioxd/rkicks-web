@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import {
   openWhatsApp,
   buildGenericMessage,
@@ -11,6 +10,7 @@ import {
 import { addSelectedVariantToCart, isSelectedVariantInCart } from '@/utils/checkout-cart';
 import { conditionLabel, getAvailableVariants, getVariantPrimarySizeLabel } from '@/utils/inventory';
 import { trackEvent } from '@/utils/analytics';
+import { useCart } from '@/context/CartContext';
 import type { Product, ProductVariant } from '@/types/product';
 import styles from './WhatsAppCTA.module.css';
 
@@ -52,6 +52,7 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
   const [message, setMessage] = useState<string | null>(null);
   const [selectedInCart, setSelectedInCart] = useState(false);
   const availableVariants = getAvailableVariants(product);
+  const { openCart } = useCart();
   const actionableVariant = selectedVariant ?? (availableVariants.length === 1 ? availableVariants[0] : null);
   const checkoutLabel = selectedInCart ? 'Ya está en carrito' : 'Agregar al carrito';
 
@@ -119,7 +120,8 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
         size_label: actionableVariant ? getVariantPrimarySizeLabel(product, actionableVariant) : null,
       });
       setSelectedInCart(true);
-      setMessage(result.incremented ? 'Cantidad actualizada en carrito.' : 'Par agregado al carrito.');
+      setMessage(null);
+      openCart(result.item);
       return;
     }
 
@@ -158,9 +160,9 @@ export function WhatsAppProductCTA({ product, selectedVariant }: ProductCTAProps
         </button>
       )}
       {selectedInCart && (
-        <Link href="/checkout" className={styles.checkoutLink}>
-          Ir al checkout
-        </Link>
+        <button type="button" className={styles.checkoutLink} onClick={() => openCart()}>
+          Ver carrito →
+        </button>
       )}
       <p className={styles.stickyMeta}>{meta}</p>
       {message && <p className={styles.stickyMessage}>{message}</p>}
