@@ -93,7 +93,7 @@ export default function Nav() {
           </svg>
         </button>
 
-        <nav aria-label="Mobile principal">
+        <nav aria-label="Mobile principal" className={styles.overlayNav}>
           <button
             type="button"
             className={`${styles.overlayLink} ${styles.overlayCartLink} ${styles.overlayBtn}`}

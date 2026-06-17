@@ -204,7 +204,21 @@
   color: var(--rk-t-bone);
 }
 
+/* Nav column inside the overlay */
+.overlayNav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--rk-sp-5);
+  width: 100%;
+  padding: 0 var(--rk-sp-4);
+}
+
 .overlayLink {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: var(--rk-sp-2) 0;
   font-family: var(--rk-font-sans);
   font-weight: 400;
   font-size: 22px;
@@ -215,17 +229,18 @@
 
 .overlayCartLink {
   display: block;
-  margin-bottom: var(--rk-sp-5);
+  width: 100%;
+  text-align: center;
+  padding: var(--rk-sp-2) 0;
   font-family: var(--rk-font-mono);
   font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-/* Reset for button elements used as nav items */
+/* Reset button defaults for nav items in the overlay */
 .overlayBtn {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
 }

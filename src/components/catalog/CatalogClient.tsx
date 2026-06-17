@@ -96,7 +96,10 @@ export default function CatalogClient({ initialQuery = '' }: Props) {
     return sortProducts(list, sort);
   }, [activeProducts, query, filters, sort]);
 
-  const featured   = filtered.find((p) => p.status === 'available') ?? null;
+  const featured = (
+    filtered.find((p) => p.status === 'available' && p.featured === true) ??
+    filtered.find((p) => p.status === 'available')
+  ) ?? null;
   const gridItems  = filtered.filter((p) => p !== featured);
   const visible    = gridItems.slice(0, page * PAGE_SIZE);
   const hasMore    = visible.length < gridItems.length;

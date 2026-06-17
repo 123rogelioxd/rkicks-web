@@ -58,6 +58,10 @@ export type ApiProduct = Record<string, unknown> & {
   } | null;
   complete_the_fit?: unknown;
   published?: boolean | null;
+  featured?: boolean | number | null;
+  is_featured?: boolean | number | null;
+  destacado?: boolean | number | null;
+  highlighted?: boolean | number | null;
 };
 
 export async function fetchLiveCatalog(): Promise<Product[]> {
@@ -151,6 +155,9 @@ export function mapApiProduct(apiProduct: ApiProduct): Product | null {
     },
     price,
     status: getProductStatus(apiProduct, variants),
+    featured: mapFeatured(
+      apiProduct.featured ?? apiProduct.is_featured ?? apiProduct.destacado ?? apiProduct.highlighted
+    ),
     variants,
     condition: mapCondition(conditionReport?.condition_grade ?? apiProduct.condition),
     conditionScore: mapConditionScore(conditionReport?.condition_grade),
@@ -296,6 +303,12 @@ function getLegacySizeLabel(apiProduct: ApiProduct): string {
 
   const us = stringOr(apiProduct.size_us, '').trim();
   return us ? `US ${us}` : '';
+}
+
+function mapFeatured(value: unknown): boolean | undefined {
+  if (value === true || value === 1 || value === '1' || normalize(value) === 'true') return true;
+  if (value === false || value === 0 || value === '0' || normalize(value) === 'false') return false;
+  return undefined;
 }
 
 function mapStatus(status: unknown): ProductStatus {

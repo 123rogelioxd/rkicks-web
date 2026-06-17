@@ -58,6 +58,7 @@ export interface Product {
   size:      ProductSize;
   price:     number;
   status:    ProductStatus;
+  featured?: boolean;
   variants:  ProductVariant[];
   condition: ConditionGrade;
   conditionScore?: number;

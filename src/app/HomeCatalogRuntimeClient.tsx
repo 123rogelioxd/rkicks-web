@@ -44,7 +44,13 @@ export default function HomeCatalogRuntimeClient() {
 
   const recentPairs = useMemo(
     () => [...availableProducts]
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a, b) => {
+        // Featured products always lead
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        // Within the same featured tier, newest first
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      })
       .slice(0, 3),
     [availableProducts]
   );
